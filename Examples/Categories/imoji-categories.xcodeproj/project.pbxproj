@@ -13,12 +13,40 @@
 		1A07A3941BACF130000DCCD5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A07A3921BACF130000DCCD5 /* Main.storyboard */; };
 		1A07A3961BACF130000DCCD5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A07A3951BACF130000DCCD5 /* Assets.xcassets */; };
 		1A07A3991BACF130000DCCD5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A07A3971BACF130000DCCD5 /* LaunchScreen.storyboard */; };
-		7E4D8F3E086D2D1EFCA763AD /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 01CDF54C92DF267FD5DED18D /* libPods.a */; };
+		FA2884001CA38005008249C3 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA2883FB1CA38005008249C3 /* Bolts.framework */; };
+		FA2884011CA38005008249C3 /* ImojiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA2883FC1CA38005008249C3 /* ImojiSDK.framework */; };
+		FA2884021CA38005008249C3 /* ImojiSDKUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA2883FD1CA38005008249C3 /* ImojiSDKUI.framework */; };
+		FA2884031CA38005008249C3 /* Masonry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA2883FE1CA38005008249C3 /* Masonry.framework */; };
+		FA2884041CA38005008249C3 /* YYImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA2883FF1CA38005008249C3 /* YYImage.framework */; };
+		FA3104E01CA1CDD400DF5863 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FA3104DF1CA1CDD400DF5863 /* libz.tbd */; };
+		FA3105051CA2089700DF5863 /* Checkouts in Resources */ = {isa = PBXBuildFile; fileRef = FA3105041CA2089700DF5863 /* Checkouts */; };
+		FA3105061CA216B400DF5863 /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA3104CB1CA1BF8000DF5863 /* WebP.framework */; };
+		FAB05E421CA381A100FFD0AB /* Bolts.framework.dSYM in Copy Files */ = {isa = PBXBuildFile; fileRef = FAB05E3D1CA381A000FFD0AB /* Bolts.framework.dSYM */; };
+		FAB05E431CA381A100FFD0AB /* ImojiSDK.framework.dSYM in Copy Files */ = {isa = PBXBuildFile; fileRef = FAB05E3E1CA381A000FFD0AB /* ImojiSDK.framework.dSYM */; };
+		FAB05E441CA381A100FFD0AB /* ImojiSDKUI.framework.dSYM in Copy Files */ = {isa = PBXBuildFile; fileRef = FAB05E3F1CA381A000FFD0AB /* ImojiSDKUI.framework.dSYM */; };
+		FAB05E451CA381A100FFD0AB /* Masonry.framework.dSYM in Copy Files */ = {isa = PBXBuildFile; fileRef = FAB05E401CA381A000FFD0AB /* Masonry.framework.dSYM */; };
+		FAB05E461CA381A100FFD0AB /* YYImage.framework.dSYM in Copy Files */ = {isa = PBXBuildFile; fileRef = FAB05E411CA381A000FFD0AB /* YYImage.framework.dSYM */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		FAB05E3C1CA3818100FFD0AB /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				FAB05E421CA381A100FFD0AB /* Bolts.framework.dSYM in Copy Files */,
+				FAB05E431CA381A100FFD0AB /* ImojiSDK.framework.dSYM in Copy Files */,
+				FAB05E441CA381A100FFD0AB /* ImojiSDKUI.framework.dSYM in Copy Files */,
+				FAB05E451CA381A100FFD0AB /* Masonry.framework.dSYM in Copy Files */,
+				FAB05E461CA381A100FFD0AB /* YYImage.framework.dSYM in Copy Files */,
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		01CDF54C92DF267FD5DED18D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		0244EB0232E2DE50D87715E5 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		1A07A3861BACF130000DCCD5 /* imoji-categories.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "imoji-categories.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A07A38A1BACF130000DCCD5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1A07A38C1BACF130000DCCD5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -29,7 +57,19 @@
 		1A07A3951BACF130000DCCD5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A07A3981BACF130000DCCD5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1A07A39A1BACF130000DCCD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		63887807739FDDC3128EA70E /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		FA2883FB1CA38005008249C3 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = Carthage/Build/iOS/Bolts.framework; sourceTree = "<group>"; };
+		FA2883FC1CA38005008249C3 /* ImojiSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImojiSDK.framework; path = Carthage/Build/iOS/ImojiSDK.framework; sourceTree = "<group>"; };
+		FA2883FD1CA38005008249C3 /* ImojiSDKUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImojiSDKUI.framework; path = Carthage/Build/iOS/ImojiSDKUI.framework; sourceTree = "<group>"; };
+		FA2883FE1CA38005008249C3 /* Masonry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Masonry.framework; path = Carthage/Build/iOS/Masonry.framework; sourceTree = "<group>"; };
+		FA2883FF1CA38005008249C3 /* YYImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YYImage.framework; path = Carthage/Build/iOS/YYImage.framework; sourceTree = "<group>"; };
+		FA3104CB1CA1BF8000DF5863 /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebP.framework; path = Carthage/Checkouts/YYImage/Vendor/WebP.framework; sourceTree = "<group>"; };
+		FA3104DF1CA1CDD400DF5863 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		FA3105041CA2089700DF5863 /* Checkouts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Checkouts; path = Carthage/Checkouts; sourceTree = "<group>"; };
+		FAB05E3D1CA381A000FFD0AB /* Bolts.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Bolts.framework.dSYM; path = Carthage/Build/iOS/Bolts.framework.dSYM; sourceTree = "<group>"; };
+		FAB05E3E1CA381A000FFD0AB /* ImojiSDK.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = ImojiSDK.framework.dSYM; path = Carthage/Build/iOS/ImojiSDK.framework.dSYM; sourceTree = "<group>"; };
+		FAB05E3F1CA381A000FFD0AB /* ImojiSDKUI.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = ImojiSDKUI.framework.dSYM; path = Carthage/Build/iOS/ImojiSDKUI.framework.dSYM; sourceTree = "<group>"; };
+		FAB05E401CA381A000FFD0AB /* Masonry.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Masonry.framework.dSYM; path = Carthage/Build/iOS/Masonry.framework.dSYM; sourceTree = "<group>"; };
+		FAB05E411CA381A000FFD0AB /* YYImage.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = YYImage.framework.dSYM; path = Carthage/Build/iOS/YYImage.framework.dSYM; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,7 +77,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7E4D8F3E086D2D1EFCA763AD /* libPods.a in Frameworks */,
+				FA3104E01CA1CDD400DF5863 /* libz.tbd in Frameworks */,
+				FA3105061CA216B400DF5863 /* WebP.framework in Frameworks */,
+				FA2884001CA38005008249C3 /* Bolts.framework in Frameworks */,
+				FA2884011CA38005008249C3 /* ImojiSDK.framework in Frameworks */,
+				FA2884021CA38005008249C3 /* ImojiSDKUI.framework in Frameworks */,
+				FA2884031CA38005008249C3 /* Masonry.framework in Frameworks */,
+				FA2884041CA38005008249C3 /* YYImage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,10 +93,15 @@
 		1A07A37D1BACF12F000DCCD5 = {
 			isa = PBXGroup;
 			children = (
+				FAB05E3D1CA381A000FFD0AB /* Bolts.framework.dSYM */,
+				FAB05E3E1CA381A000FFD0AB /* ImojiSDK.framework.dSYM */,
+				FAB05E3F1CA381A000FFD0AB /* ImojiSDKUI.framework.dSYM */,
+				FAB05E401CA381A000FFD0AB /* Masonry.framework.dSYM */,
+				FAB05E411CA381A000FFD0AB /* YYImage.framework.dSYM */,
+				FA3105041CA2089700DF5863 /* Checkouts */,
 				1A07A3881BACF130000DCCD5 /* imoji-categories */,
 				1A07A3871BACF130000DCCD5 /* Products */,
-				AD5CD9936268510D6AB44C6E /* Pods */,
-				639637E28EAE5FE9278AAF4F /* Frameworks */,
+				FA3104AC1CA0A0FA00DF5863 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -86,21 +137,18 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		639637E28EAE5FE9278AAF4F /* Frameworks */ = {
+		FA3104AC1CA0A0FA00DF5863 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				01CDF54C92DF267FD5DED18D /* libPods.a */,
+				FA3104DF1CA1CDD400DF5863 /* libz.tbd */,
+				FA3104CB1CA1BF8000DF5863 /* WebP.framework */,
+				FA2883FB1CA38005008249C3 /* Bolts.framework */,
+				FA2883FC1CA38005008249C3 /* ImojiSDK.framework */,
+				FA2883FD1CA38005008249C3 /* ImojiSDKUI.framework */,
+				FA2883FE1CA38005008249C3 /* Masonry.framework */,
+				FA2883FF1CA38005008249C3 /* YYImage.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		AD5CD9936268510D6AB44C6E /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				63887807739FDDC3128EA70E /* Pods.debug.xcconfig */,
-				0244EB0232E2DE50D87715E5 /* Pods.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -110,12 +158,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1A07A39D1BACF130000DCCD5 /* Build configuration list for PBXNativeTarget "imoji-categories" */;
 			buildPhases = (
-				9CB6E76D10BF8838723F9EB9 /* Check Pods Manifest.lock */,
 				1A07A3821BACF130000DCCD5 /* Sources */,
 				1A07A3831BACF130000DCCD5 /* Frameworks */,
 				1A07A3841BACF130000DCCD5 /* Resources */,
-				45A4AFE847372B104470B8DD /* Copy Pods Resources */,
-				29152714BCCA7F3CFC07CD30 /* Embed Pods Frameworks */,
+				FAB05E3C1CA3818100FFD0AB /* Copy Files */,
+				FA3104AD1CA0A13900DF5863 /* Carthage Run Script */,
 			);
 			buildRules = (
 			);
@@ -165,6 +212,7 @@
 			files = (
 				1A07A3991BACF130000DCCD5 /* LaunchScreen.storyboard in Resources */,
 				1A07A3961BACF130000DCCD5 /* Assets.xcassets in Resources */,
+				FA3105051CA2089700DF5863 /* Checkouts in Resources */,
 				1A07A3941BACF130000DCCD5 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -172,50 +220,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		29152714BCCA7F3CFC07CD30 /* Embed Pods Frameworks */ = {
+		FA3104AD1CA0A13900DF5863 /* Carthage Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Bolts.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Masonry.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/YYImage.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ImojiSDK.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ImojiSDKUI.framework",
 			);
-			name = "Embed Pods Frameworks";
+			name = "Carthage Run Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		45A4AFE847372B104470B8DD /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9CB6E76D10BF8838723F9EB9 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -336,12 +358,17 @@
 		};
 		1A07A39E1BACF130000DCCD5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 63887807739FDDC3128EA70E /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Checkouts/YYImage/Vendor",
+				);
 				INFOPLIST_FILE = "imoji-categories/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sopressata.imoji-categories";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -350,12 +377,17 @@
 		};
 		1A07A39F1BACF130000DCCD5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0244EB0232E2DE50D87715E5 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Checkouts/YYImage/Vendor",
+				);
 				INFOPLIST_FILE = "imoji-categories/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sopressata.imoji-categories";
 				PRODUCT_NAME = "$(TARGET_NAME)";

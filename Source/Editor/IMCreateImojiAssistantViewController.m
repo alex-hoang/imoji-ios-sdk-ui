@@ -24,7 +24,7 @@
 //
 
 #import "IMCreateImojiAssistantViewController.h"
-#import "View+MASAdditions.h"
+#import <Masonry/View+MASAdditions.h>
 #import "IMResourceBundleUtil.h"
 #import "IMAttributeStringUtil.h"
 #import "IMCreateImojiUITheme.h"

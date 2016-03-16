@@ -24,7 +24,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "IMImojiSession.h"
+#import <ImojiSDK/IMImojiSession.h>
 
 #define IMKeyboardViewPortraitHeight 258.0f
 #define IMKeyboardViewLandscapeHeight 205.0f

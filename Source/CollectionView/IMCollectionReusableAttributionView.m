@@ -26,9 +26,9 @@
 #import "IMCollectionReusableAttributionView.h"
 #import "IMResourceBundleUtil.h"
 #import "IMAttributeStringUtil.h"
-#import "View+MASAdditions.h"
-#import "IMArtist.h"
-#import "IMCategoryAttribution.h"
+#import <Masonry/View+MASAdditions.h>
+#import <ImojiSDK/IMArtist.h>
+#import <ImojiSDK/IMCategoryAttribution.h>
 
 NSString *const IMCollectionReusableAttributionViewReuseId = @"IMCollectionReusableAttributionViewReuseId";
 CGFloat const IMCollectionReusableAttributionViewContainerOffset = 30.0f;

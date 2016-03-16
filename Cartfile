@@ -1,0 +1,3 @@
+github "SnapKit/Masonry"
+github "alex-hoang/YYImage" "master"
+github "alex-hoang/imoji-ios-sdk" "carthage"

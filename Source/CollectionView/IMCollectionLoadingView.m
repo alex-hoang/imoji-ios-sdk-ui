@@ -24,7 +24,7 @@
 //
 
 #import "IMCollectionLoadingView.h"
-#import "View+MASAdditions.h"
+#import <Masonry/View+MASAdditions.h>
 
 @implementation IMCollectionLoadingView {
 

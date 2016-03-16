@@ -12,8 +12,8 @@
 #import <ImojiSDKUI/IMCollectionViewController.h>
 #import <ImojiSDKUI/IMCollectionView.h>
 #import "ViewController.h"
-#import "IMToolbar.h"
-#import "IMResourceBundleUtil.h"
+#import <ImojiSDKUI/IMToolbar.h>
+#import <ImojiSDKUI/IMResourceBundleUtil.h>
 
 @interface ViewController () <IMCollectionViewControllerDelegate>
 

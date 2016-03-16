@@ -25,7 +25,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import <ImojiSDK/IMImojiSession.h>
+#import <ImojiSDK/ImojiSDK.h>
 #import "IMCollectionViewSplashCell.h"
 
 typedef NS_ENUM(NSUInteger, IMCollectionViewContentType) {

@@ -27,12 +27,12 @@
 #import "IMCreateImojiView.h"
 #import "IMTagCollectionView.h"
 #import "IMResourceBundleUtil.h"
-#import "IMImojiObject.h"
-#import "IMImojiSession.h"
+#import <ImojiSDK/IMImojiObject.h>
+#import <ImojiSDK/IMImojiSession.h>
 #import "IMCreateImojiAssistantViewController.h"
 #import "IMPopInAnimatedTransition.h"
 #import "IMCreateImojiUITheme.h"
-#import "UIImage+Extensions.h"
+#import <ImojiSDK/UIImage+Extensions.h>
 #import <Masonry/Masonry.h>
 
 

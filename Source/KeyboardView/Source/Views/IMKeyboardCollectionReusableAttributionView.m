@@ -25,10 +25,11 @@
 
 #import "IMKeyboardCollectionReusableAttributionView.h"
 #import "IMAttributeStringUtil.h"
-#import "View+MASAdditions.h"
+//#import "View+MASAdditions.h"
+#import <Masonry/View+MASAdditions.h>
 #import "IMResourceBundleUtil.h"
-#import "IMCategoryAttribution.h"
-#import "IMArtist.h"
+#import <ImojiSDK/IMCategoryAttribution.h>
+#import <ImojiSDK/IMArtist.h>
 
 CGFloat const IMKeyboardCollectionReusableAttributionViewOffsetFromHeader = 10.0f;
 CGFloat const IMKeyboardCollectionReusableAttributionViewLandscapeRatio = 0.875f;

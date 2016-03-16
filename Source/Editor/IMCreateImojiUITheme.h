@@ -24,6 +24,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 /**
  * Shared styles for the Imoji Creation View

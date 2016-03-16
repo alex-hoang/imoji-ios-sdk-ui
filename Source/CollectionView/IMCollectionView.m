@@ -32,9 +32,9 @@
 #import "IMResourceBundleUtil.h"
 #import "IMConnectivityUtil.h"
 #import "IMCollectionReusableAttributionView.h"
-#import "IMArtist.h"
+#import <ImojiSDK/IMArtist.h>
 #import "IMCollectionReusableHeaderView.h"
-#import "IMCategoryAttribution.h"
+#import <ImojiSDK/IMCategoryAttribution.h>
 #import "IMCollectionLoadingView.h"
 
 NSUInteger const IMCollectionViewNumberOfItemsToLoad = 60;

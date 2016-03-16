@@ -42,8 +42,13 @@
     static dispatch_once_t predicate;
 
     dispatch_once(&predicate, ^{
+        #if COCOAPODS
         bundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"ImojiUIStrings"
                                                                                            ofType:@"bundle"]];
+        #else
+        bundle = [NSBundle bundleWithPath: [[NSBundle bundleWithIdentifier:@"com.sopressata.ImojiSDKUI"] pathForResource:@"ImojiUIStrings"
+                                                                                                                  ofType:@"bundle"]];
+        #endif
     });
 
     return bundle;
@@ -54,8 +59,13 @@
     static dispatch_once_t predicate;
 
     dispatch_once(&predicate, ^{
+        #if COCOAPODS
         bundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"ImojiUIAssets"
                                                                                            ofType:@"bundle"]];
+        #else
+        bundle = [NSBundle bundleWithPath: [[NSBundle bundleWithIdentifier:@"com.sopressata.ImojiSDKUI"] pathForResource:@"ImojiUIAssets"
+                                                                                                                  ofType:@"bundle"]];
+        #endif
     });
 
     return bundle;

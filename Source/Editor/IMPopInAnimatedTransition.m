@@ -24,7 +24,7 @@
 //
 
 #import "IMPopInAnimatedTransition.h"
-#import "View+MASAdditions.h"
+#import <Masonry/View+MASAdditions.h>
 
 @implementation IMPopInAnimatedTransition {
 

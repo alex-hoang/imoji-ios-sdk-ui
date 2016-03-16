@@ -58,7 +58,12 @@ NSString *const IMKeyboardViewDefaultFontFamily = @"Imoji-Regular";
     self = [super initWithFrame:CGRectZero];
     if (self) {
         self.session = session;
+        #if COCOAPODS
         self.imageBundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"ImojiKeyboardAssets" ofType:@"bundle"]];
+        #else
+        self.imageBundle = [NSBundle bundleWithPath:[[NSBundle bundleWithIdentifier:@"com.sopressata.ImojiKeyboardAssets"] pathForResource:@"ImojiKeyboardAssets"
+                                                                                                                                    ofType:@"bundle"]];
+        #endif
         self.fontFamily = IMKeyboardViewDefaultFontFamily;
         self.closeButtonIsHidden = NO;
 

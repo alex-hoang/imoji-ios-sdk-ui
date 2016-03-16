@@ -25,7 +25,7 @@
 
 #import "IMCollectionReusableHeaderView.h"
 #import "IMAttributeStringUtil.h"
-#import "View+MASAdditions.h"
+#import <Masonry/View+MASAdditions.h>
 #import "IMResourceBundleUtil.h"
 
 NSString *const IMCollectionReusableHeaderViewReuseId = @"IMCollectionReusableHeaderViewReuseId";

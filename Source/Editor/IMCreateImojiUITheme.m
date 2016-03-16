@@ -45,7 +45,11 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        #if COCOAPODS
         NSString *bundlePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ImojiEditorAssets" ofType:@"bundle"];
+        #else
+        NSString *bundlePath = [[NSBundle bundleWithIdentifier:@"com.sopressata.ImojiSDKUI"] pathForResource:@"ImojiEditorAssets" ofType:@"bundle"];
+        #endif
         
         _tagScreenNavigationToolbarBarTintColor = [UIColor colorWithWhite:250.f / 255.f alpha:1.0f];
         _tagScreenTintColor = [UIColor colorWithWhite:122.f / 255.f alpha:1.0f];
