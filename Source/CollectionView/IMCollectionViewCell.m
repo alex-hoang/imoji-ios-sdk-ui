@@ -70,7 +70,7 @@ NSString *const IMCollectionViewCellReuseId = @"ImojiCollectionViewCellReuseId";
         self.imojiView.contentMode = UIViewContentModeScaleAspectFit;
         _hasImojiImage = YES;
     } else {
-        self.imojiView.image = [IMResourceBundleUtil loadingPlaceholderImageWithRadius:30];
+        self.imojiView.image = [IMResourceBundleUtil loadingPlaceholderImageWithRadius:62.0f];
         self.imojiView.highlightedImage = self.imojiView.image;
         self.imojiView.contentMode = UIViewContentModeCenter;
         _hasImojiImage = NO;

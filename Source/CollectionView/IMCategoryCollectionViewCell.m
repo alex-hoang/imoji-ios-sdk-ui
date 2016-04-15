@@ -87,7 +87,7 @@ NSString *const IMCategoryCollectionViewCellReuseId = @"IMCategoryCollectionView
             self.imojiView.transform = CGAffineTransformMakeScale(.2f, .2f);
         }
     } else {
-        self.imojiView.image = [IMResourceBundleUtil loadingPlaceholderImageWithRadius:30];
+        self.imojiView.image = [IMResourceBundleUtil loadingPlaceholderImageWithRadius:62.0f];
         self.imojiView.highlightedImage = self.imojiView.image;
         self.imojiView.contentMode = UIViewContentModeCenter;
 

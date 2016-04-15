@@ -61,21 +61,70 @@
     return bundle;
 }
 
++ (NSArray *)loadingPlaceholderColors {
+    static NSArray *loadingPlaceholderColors = nil;
+    static dispatch_once_t predicate;
+
+    dispatch_once(&predicate, ^{
+        loadingPlaceholderColors = @[
+                [UIColor colorWithRed:51.0f / 255.0f green:157.0f / 255.0f blue:255.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:105.0f / 255.0f green:203.0f / 255.0f blue:210.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:255.0f / 255.0f green:207.0f / 255.0f blue:51.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:251.0f / 255.0f green:99.0f / 255.0f blue:112.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:222.0f / 255.0f green:171.0f / 255.0f blue:201.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:133.0f / 255.0f green:173.0f / 255.0f blue:214.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:66.0f / 255.0f green:217.0f / 255.0f blue:66.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:255.0f / 255.0f green:152.0f / 255.0f blue:84.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:235.0f / 255.0f green:157.0f / 255.0f blue:157.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:145.0f / 255.0f green:107.0f / 255.0f blue:255.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:77.0f / 255.0f green:216.0f / 255.0f blue:247.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:133.0f / 255.0f green:198.0f / 255.0f blue:134.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:212.0f / 255.0f green:168.0f / 255.0f blue:140.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:255.0f / 255.0f green:125.0f / 255.0f blue:180.0f / 255.0f alpha:1.0f],
+                [UIColor colorWithRed:184.0f / 255.0f green:170.0f / 255.0f blue:210.0f / 255.0f alpha:1.0f]
+        ];
+    });
+
+    return loadingPlaceholderColors;
+}
+
 + (UIImage *)loadingPlaceholderImageWithRadius:(CGFloat)radius {
-    return [IMResourceBundleUtil loadingPlaceholderImageWithRadius:radius color:[UIColor colorWithRed:81.0f / 255.0f
-                                                                                                green:185.0f / 255.0f
-                                                                                                 blue:197.0f / 255.0f
-                                                                                                alpha:.3f]];
+    NSArray *placeholderColors = [[self class] loadingPlaceholderColors];
+    return [IMResourceBundleUtil loadingPlaceholderImageWithRadius:radius color:placeholderColors[arc4random() % placeholderColors.count]];
 }
 
 + (UIImage *)loadingPlaceholderImageWithRadius:(CGFloat)radius color:(UIColor *)color {
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(radius, radius), NO, 0.f);
     CGContextRef context = UIGraphicsGetCurrentContext();
+    CGRect frame = CGRectMake(0, 0, radius, radius);
 
+    // Gradient settings
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGFloat locations[] = {0.0f, 1.0f};
+    CGFloat colorComponents[] = {
+            255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 0.16f,
+            255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 0.0f
+    };
+
+    // Fill circle
     CGContextSetFillColorWithColor(context, color.CGColor);
     CGContextSetBlendMode(context, kCGBlendModeNormal);
     CGContextSetLineWidth(context, 0);
-    CGContextFillEllipseInRect(context, CGRectMake(0, 0, radius, radius));
+    CGContextFillEllipseInRect(context, frame);
+
+    // Mask the gradient
+    CGContextSaveGState(context);
+    CGContextAddEllipseInRect(context, frame);
+    CGContextClip(context);
+
+    // Draw gradient
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, colorComponents, locations, 2);
+    CGContextDrawLinearGradient(context, gradient, CGPointMake(radius / 2.0f, 0), CGPointMake(radius / 2.0f, radius), 0);
+
+    // Release
+    CGColorSpaceRelease(colorSpace);
+    CGGradientRelease(gradient);
+    CGContextRestoreGState(context);
 
     UIImage *layer = UIGraphicsGetImageFromCurrentImageContext();
 

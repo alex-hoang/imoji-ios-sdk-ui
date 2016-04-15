@@ -10,16 +10,17 @@
 #import <ImojiSDK/ImojiSDK.h>
 #import <ImojiSDKUI/IMAttributeStringUtil.h>
 #import <ImojiSDKUI/IMCollectionViewController.h>
-#import <ImojiSDKUI/IMCollectionView.h>
-#import <ImojiSDKUI/IMToolbar.h>
-#import <ImojiSDKUI/IMResourceBundleUtil.h>
 #import "ViewController.h"
+#import <ImojiSDK/IMCategoryAttribution.h>
+#import <ImojiSDKUI/IMAttributionShelfView.h>
 
-@interface ViewController () <IMCollectionViewControllerDelegate>
+@interface ViewController () <IMCollectionViewControllerDelegate, IMAttributionShelfViewDelegate>
 
 @property(nonatomic, strong) UIButton *reactionsButton;
 @property(nonatomic, strong) UIButton *trendingButton;
 @property(nonatomic, strong) UIButton *artistButton;
+@property(nonatomic, strong) IMAttributionShelfView *attributionShelf;
+@property(nonatomic, strong) UIView *attributionBackgroundView;
 @property(nonatomic, strong) IMImojiSession *imojiSession;
 
 @end
@@ -130,33 +131,108 @@
     [self displayCollectionViewControllerWithCategory:IMImojiSessionCategoryClassificationArtist];
 }
 
+- (void)attributionBackgroundViewTapped {
+    [self userDidTapAttributionShelfButtonWithType:IMAttributionShelfViewButtonCancel];
+}
+
 - (void)userDidSelectCategory:(IMImojiCategoryObject *)category fromCollectionView:(IMCollectionView *)collectionView {
     [collectionView loadImojisFromCategory:category];
 }
 
 - (void)userDidSelectImoji:(IMImojiObject *__nonnull)imoji fromCollectionView:(IMCollectionView *__nonnull)collectionView {
-    IMImojiObjectRenderingOptions *renderingOptions =
-            [IMImojiObjectRenderingOptions optionsWithRenderSize:IMImojiObjectRenderSizeFullResolution];
-    renderingOptions.aspectRatio = [NSValue valueWithCGSize:CGSizeMake(16.0f, 9.0f)];
+    self.attributionBackgroundView = [[UIView alloc] init];
+    self.attributionBackgroundView.backgroundColor = [UIColor colorWithRed:255.0f / 255.0f green:255.0f / 255.0f blue:255.0f / 255.0f alpha:0.8f];
+    self.attributionBackgroundView.alpha = 0.0f;
+    [self.attributionBackgroundView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(attributionBackgroundViewTapped)]];
 
-    [self.imojiSession renderImoji:imoji
-                           options:renderingOptions
-                          callback:^(UIImage *image, NSError *error) {
-                              NSArray *sharingItems = @[image];
-                              UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:sharingItems
-                                                                                                               applicationActivities:nil];
-                              activityController.excludedActivityTypes = @[
-                                      UIActivityTypePrint,
-                                      UIActivityTypeCopyToPasteboard,
-                                      UIActivityTypeAssignToContact,
-                                      UIActivityTypeSaveToCameraRoll,
-                                      UIActivityTypeAddToReadingList,
-                                      UIActivityTypePostToFlickr,
-                                      UIActivityTypePostToVimeo
-                              ];
+    self.attributionShelf = [IMAttributionShelfView imojiAttributionShelfViewWithImoji:imoji imojiSession:self.imojiSession];
+    self.attributionShelf.delegate = self;
 
-                              [self.presentedViewController presentViewController:activityController animated:YES completion:nil];
-                          }];
+    [self.imojiSession fetchAttributionByImojiIdentifiers:@[imoji.identifier]
+                                                 callback:^(NSDictionary *attribution, NSError *error) {
+                                                     self.attributionShelf.attribution = !error ? attribution[imoji.identifier] : nil;
+                                                 }];
+
+    [self.presentedViewController.view addSubview:self.attributionBackgroundView];
+    [self.presentedViewController.view addSubview:self.attributionShelf];
+
+    [self.attributionBackgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.presentedViewController.view);
+    }];
+
+    [self.attributionShelf mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(@(IMAttributionShelfViewHeight));
+        make.bottom.equalTo(self.presentedViewController.view).offset(IMAttributionShelfViewHeight + IMAttributionShelfViewPreviewImojiImageViewWidthHeight);
+        make.left.and.right.equalTo(self.presentedViewController.view);
+    }];
+
+    [self.presentedViewController.view layoutIfNeeded];
+
+    [UIView animateWithDuration:0.4f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        self.attributionBackgroundView.alpha = 1.0f;
+        [self.attributionShelf mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.presentedViewController.view);
+        }];
+        [self.presentedViewController.view layoutIfNeeded];
+    } completion:nil];
+
+//    IMImojiObjectRenderingOptions *renderingOptions =
+//            [IMImojiObjectRenderingOptions optionsWithRenderSize:IMImojiObjectRenderSizeFullResolution];
+//    renderingOptions.aspectRatio = [NSValue valueWithCGSize:CGSizeMake(16.0f, 9.0f)];
+//
+//    [self.imojiSession renderImoji:imoji
+//                           options:renderingOptions
+//                          callback:^(UIImage *image, NSError *error) {
+//                              NSArray *sharingItems = @[image];
+//                              UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:sharingItems
+//                                                                                                               applicationActivities:nil];
+//                              activityController.excludedActivityTypes = @[
+//                                      UIActivityTypePrint,
+//                                      UIActivityTypeCopyToPasteboard,
+//                                      UIActivityTypeAssignToContact,
+//                                      UIActivityTypeSaveToCameraRoll,
+//                                      UIActivityTypeAddToReadingList,
+//                                      UIActivityTypePostToFlickr,
+//                                      UIActivityTypePostToVimeo
+//                              ];
+//
+//                              [self.presentedViewController presentViewController:activityController animated:YES completion:nil];
+//                          }];
+}
+
+- (void)userDidTapAttributionShelfButtonWithType:(IMAttributionShelfViewButtonType)buttonType {
+    switch (buttonType) {
+        case IMAttributionShelfViewButtonAttribution:
+            [[UIApplication sharedApplication] openURL:self.attributionShelf.attribution.URL];
+            break;
+
+        case IMAttributionShelfViewButtonCancel:
+        case IMAttributionShelfViewButtonRelated: {
+            [self.presentedViewController.view layoutIfNeeded];
+
+            if(buttonType == IMAttributionShelfViewButtonRelated) {
+                NSArray *relatedTags = self.attributionShelf.attribution.relatedTags;
+                [((IMCollectionViewController *) self.presentedViewController).collectionView loadImojisFromSearch:relatedTags[arc4random() % relatedTags.count]];
+            }
+
+            [self.attributionShelf mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.bottom.equalTo(self.presentedViewController.view).offset(IMAttributionShelfViewHeight + IMAttributionShelfViewPreviewImojiImageViewWidthHeight);
+            }];
+
+            [UIView animateWithDuration:0.4f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                self.attributionBackgroundView.alpha = 0.0f;
+                [self.presentedViewController.view layoutIfNeeded];
+            } completion:^(BOOL finished) {
+                [self.attributionBackgroundView removeFromSuperview];
+                [self.attributionShelf removeFromSuperview];
+            }];
+
+            break;
+        }
+
+        default:
+            break;
+    }
 }
 
 - (void)userDidSelectSplash:(IMCollectionViewSplashCellType)splashType fromCollectionView:(IMCollectionView *)collectionView {

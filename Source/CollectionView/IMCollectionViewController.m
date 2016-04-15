@@ -26,13 +26,15 @@
 #import <Masonry/Masonry.h>
 #import "IMCollectionViewController.h"
 #import "IMResourceBundleUtil.h"
+#import "IMCategoryCollectionViewCell.h"
+#import "IMCollectionViewCell.h"
 
 CGFloat const IMCollectionViewControllerBottomBarDefaultHeight = 60.0f;
 UIEdgeInsets const IMCollectionViewControllerSearchFieldInsets = {0, 10, 0, 10};
 UIEdgeInsets const IMCollectionViewControllerBackButtonInsets = {0, 10, 0, 10};
 NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 150;
 
-@interface IMCollectionViewController () <UISearchBarDelegate, IMToolbarDelegate, IMCollectionViewControllerDelegate>
+@interface IMCollectionViewController () <UISearchBarDelegate, IMToolbarDelegate, IMCollectionViewControllerDelegate, UIViewControllerPreviewingDelegate>
 
 @property(nonatomic, strong) NSOperation *pendingSearchOperation;
 @end
@@ -301,10 +303,61 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 150;
             self.bottomToolbar == bar ? UIBarPositionBottom : UIBarPositionAny;
 }
 
+#pragma mark Previewing Delegate (3D/Force Touch)
+
+- (UIViewController *)previewingContext:(id <UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location {
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+
+    if ([cell isKindOfClass:[IMCategoryCollectionViewCell class]]) {
+        IMImojiCategoryObject *imojiCategory = [self.collectionView contentForIndexPath:indexPath];
+
+        UIViewController *previewController = [[UIViewController alloc] init];
+        previewController.preferredContentSize = CGSizeMake(0.0, 0.0);
+
+        CGFloat cellRelativeOriginY = [self.collectionView convertRect:cell.frame toView:self.view].origin.y;
+        // Check if part of the cell is under the bottom toolbar
+        if(cellRelativeOriginY + cell.frame.size.height > self.bottomToolbar.frame.origin.y) {
+            // Only focus the part of the cell above the bottom toolbar.
+            // Subtract the cell's height with the height of the part of the cell under the toolbar.
+            previewingContext.sourceRect = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, cell.frame.size.height - (cellRelativeOriginY + cell.frame.size.height - self.bottomToolbar.frame.origin.y));
+        } else {
+            previewingContext.sourceRect = cell.frame;
+        }
+
+        IMCollectionView *previewCollectionView = [IMCollectionView imojiCollectionViewWithSession:self.session];
+        previewController.view = previewCollectionView;
+        [previewCollectionView loadImojisFromCategory:imojiCategory];
+
+        return previewController;
+    }
+
+    return nil;
+}
+
+- (void)previewingContext:(id <UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit {
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:previewingContext.sourceRect.origin];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+
+    if ([cell isKindOfClass:[IMCategoryCollectionViewCell class]]) {
+        IMImojiCategoryObject *imojiCategory = [self.collectionView contentForIndexPath:indexPath];
+
+        [self.collectionView loadImojisFromCategory:imojiCategory];
+    }
+}
+
 #pragma mark Overridable Methods
 
 - (nonnull IMCollectionView *)createCollectionViewWithSession:(IMImojiSession *)session {
     return [IMCollectionView imojiCollectionViewWithSession:session];
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    [super traitCollectionDidChange:previousTraitCollection];
+
+    if (self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable) {
+        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
+    }
 }
 
 #pragma mark Initializers
