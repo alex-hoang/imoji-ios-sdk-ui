@@ -33,6 +33,6 @@
 #import "ImojiSDKUI/IMCreateImojiUITheme.h"
 #import "ImojiSDKUI/IMToolbar.h"
 #import "ImojiSDKUI/IMResourceBundleUtil.h"
-#import "Masonry/Masonry.h"
+#import <Masonry/Masonry.h>
 
 #endif

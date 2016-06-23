@@ -45,9 +45,4 @@ struct IMArtmojiConstants {
     static let BrushSizeThumbWidthHeight: CGFloat = 30.0
     static let FormatIdentifier = "com.sopressata.artmoji.artmoji-photos"
     static let FormatVersion = "1.0"
-
-    struct PresentingViewControllerType {
-        static let CreateArtmoji = 0
-        static let CreateImoji = 1
-    }
 }

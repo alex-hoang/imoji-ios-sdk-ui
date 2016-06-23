@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2DBA102E68C70FE6B7869573 /* IMCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1E914968982248EC96C8 /* IMCameraViewController.swift */; };
+		0D96D2EF6217001684245938 /* Pods_artmoji_photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30B6B09EAF0B3F8C93CD4143 /* Pods_artmoji_photos.framework */; };
 		2DBA147E7800A7B633E690CB /* IMCreateArtmojiSelectedImojiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1483D66BCD5BEE847242 /* IMCreateArtmojiSelectedImojiView.swift */; };
 		2DBA174C3B2BDFF6D669D50A /* IMColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1E3AA9F6388576E01269 /* IMColorSlider.swift */; };
 		2DBA1B9574F67B608A727854 /* IMCreateArtmojiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10D785FCCF1459E8B8C9 /* IMCreateArtmojiView.swift */; };
-		7C8591B438105B434A5E11D5 /* Pods_artmoji.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B62BB7EB7AEA4DF9734B3BE5 /* Pods_artmoji.framework */; };
-		DF3620E870EC2E18C74AADAB /* Pods_artmoji_photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 324D76C61F6CC4744FA89BD3 /* Pods_artmoji_photos.framework */; };
+		F3786A29B9EB4A7C8B90EF01 /* Pods_artmoji.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3737BAB62CF52AA1E46C62F0 /* Pods_artmoji.framework */; };
 		FA1B01601BCCA8D1002B0B2E /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA1B015F1BCCA8D1002B0B2E /* PhotosUI.framework */; };
 		FA1B01621BCCA8D1002B0B2E /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA1B01611BCCA8D1002B0B2E /* Photos.framework */; };
 		FA1B01651BCCA8D1002B0B2E /* PhotoEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1B01641BCCA8D1002B0B2E /* PhotoEditingViewController.swift */; };
@@ -27,13 +26,11 @@
 		FA1B017E1BCCB0D5002B0B2E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA9223101BB4B07A00366238 /* Images.xcassets */; };
 		FA5167C91BBE129800DC9274 /* IMCreateArtmojiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5167C81BBE129800DC9274 /* IMCreateArtmojiViewController.swift */; };
 		FA92230A1BB4B07A00366238 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9223091BB4B07A00366238 /* AppDelegate.swift */; };
-		FA92230C1BB4B07A00366238 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA92230B1BB4B07A00366238 /* ViewController.swift */; };
+		FA92230C1BB4B07A00366238 /* MainCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA92230B1BB4B07A00366238 /* MainCameraViewController.swift */; };
 		FA92230F1BB4B07A00366238 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA92230D1BB4B07A00366238 /* Main.storyboard */; };
 		FA9223111BB4B07A00366238 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA9223101BB4B07A00366238 /* Images.xcassets */; };
 		FA92232A1BB4B1E700366238 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = FA9223291BB4B1E700366238 /* Podfile */; };
 		FACB2DC61BD731E300999340 /* Launch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FACB2DC51BD731E300999340 /* Launch.storyboard */; };
-		FAF740161BE0742700CA55D1 /* IMDrawingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF740151BE0742700CA55D1 /* IMDrawingUtils.swift */; };
-		FAF740171BE0742700CA55D1 /* IMDrawingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF740151BE0742700CA55D1 /* IMDrawingUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,16 +58,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		10939A5C835EB0FA72B95D7E /* Pods-artmoji-photos.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-artmoji-photos.release.xcconfig"; path = "Pods/Target Support Files/Pods-artmoji-photos/Pods-artmoji-photos.release.xcconfig"; sourceTree = "<group>"; };
 		2DBA10D785FCCF1459E8B8C9 /* IMCreateArtmojiView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMCreateArtmojiView.swift; sourceTree = "<group>"; };
 		2DBA1483D66BCD5BEE847242 /* IMCreateArtmojiSelectedImojiView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMCreateArtmojiSelectedImojiView.swift; sourceTree = "<group>"; };
 		2DBA1E3AA9F6388576E01269 /* IMColorSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMColorSlider.swift; sourceTree = "<group>"; };
-		2DBA1E914968982248EC96C8 /* IMCameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMCameraViewController.swift; sourceTree = "<group>"; };
-		324D76C61F6CC4744FA89BD3 /* Pods_artmoji_photos.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_artmoji_photos.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8882E5445C380967FA7CA055 /* Pods-artmoji.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-artmoji.debug.xcconfig"; path = "Pods/Target Support Files/Pods-artmoji/Pods-artmoji.debug.xcconfig"; sourceTree = "<group>"; };
-		90FB88C9A789D5424DD1CA48 /* Pods-artmoji.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-artmoji.release.xcconfig"; path = "Pods/Target Support Files/Pods-artmoji/Pods-artmoji.release.xcconfig"; sourceTree = "<group>"; };
-		AEA33833DCBBFA1CB779D17A /* Pods-artmoji-photos.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-artmoji-photos.debug.xcconfig"; path = "Pods/Target Support Files/Pods-artmoji-photos/Pods-artmoji-photos.debug.xcconfig"; sourceTree = "<group>"; };
-		B62BB7EB7AEA4DF9734B3BE5 /* Pods_artmoji.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_artmoji.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		30B6B09EAF0B3F8C93CD4143 /* Pods_artmoji_photos.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_artmoji_photos.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3737BAB62CF52AA1E46C62F0 /* Pods_artmoji.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_artmoji.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		49FD38FDEA5AE69D3BF5B0F0 /* Pods-artmoji.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-artmoji.debug.xcconfig"; path = "Pods/Target Support Files/Pods-artmoji/Pods-artmoji.debug.xcconfig"; sourceTree = "<group>"; };
+		93F8FAEDEF9DAEE43D46F41A /* Pods-artmoji-photos.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-artmoji-photos.debug.xcconfig"; path = "Pods/Target Support Files/Pods-artmoji-photos/Pods-artmoji-photos.debug.xcconfig"; sourceTree = "<group>"; };
+		ADDBF5007198FCA2DD89184C /* Pods-artmoji-photos.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-artmoji-photos.release.xcconfig"; path = "Pods/Target Support Files/Pods-artmoji-photos/Pods-artmoji-photos.release.xcconfig"; sourceTree = "<group>"; };
 		FA1B015E1BCCA8D1002B0B2E /* artmoji-photos.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "artmoji-photos.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA1B015F1BCCA8D1002B0B2E /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
 		FA1B01611BCCA8D1002B0B2E /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
@@ -83,12 +78,12 @@
 		FA9223041BB4B07A00366238 /* artmoji.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = artmoji.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA9223081BB4B07A00366238 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FA9223091BB4B07A00366238 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		FA92230B1BB4B07A00366238 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		FA92230B1BB4B07A00366238 /* MainCameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCameraViewController.swift; sourceTree = "<group>"; };
 		FA92230E1BB4B07A00366238 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FA9223101BB4B07A00366238 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		FA9223291BB4B1E700366238 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Podfile; path = ../Artmoji/Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		FACB2DC51BD731E300999340 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
-		FAF740151BE0742700CA55D1 /* IMDrawingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMDrawingUtils.swift; sourceTree = "<group>"; };
+		FB0EA536C65BDBBDBA036CAD /* Pods-artmoji.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-artmoji.release.xcconfig"; path = "Pods/Target Support Files/Pods-artmoji/Pods-artmoji.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,7 +93,7 @@
 			files = (
 				FA1B01601BCCA8D1002B0B2E /* PhotosUI.framework in Frameworks */,
 				FA1B01621BCCA8D1002B0B2E /* Photos.framework in Frameworks */,
-				DF3620E870EC2E18C74AADAB /* Pods_artmoji_photos.framework in Frameworks */,
+				0D96D2EF6217001684245938 /* Pods_artmoji_photos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,7 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C8591B438105B434A5E11D5 /* Pods_artmoji.framework in Frameworks */,
+				F3786A29B9EB4A7C8B90EF01 /* Pods_artmoji.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,19 +113,19 @@
 			children = (
 				FA1B015F1BCCA8D1002B0B2E /* PhotosUI.framework */,
 				FA1B01611BCCA8D1002B0B2E /* Photos.framework */,
-				B62BB7EB7AEA4DF9734B3BE5 /* Pods_artmoji.framework */,
-				324D76C61F6CC4744FA89BD3 /* Pods_artmoji_photos.framework */,
+				3737BAB62CF52AA1E46C62F0 /* Pods_artmoji.framework */,
+				30B6B09EAF0B3F8C93CD4143 /* Pods_artmoji_photos.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B75C172C5C1E4EF1A3A428E0 /* Pods */ = {
+		89BC06C1DBFE92C16DC0A8DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				8882E5445C380967FA7CA055 /* Pods-artmoji.debug.xcconfig */,
-				90FB88C9A789D5424DD1CA48 /* Pods-artmoji.release.xcconfig */,
-				AEA33833DCBBFA1CB779D17A /* Pods-artmoji-photos.debug.xcconfig */,
-				10939A5C835EB0FA72B95D7E /* Pods-artmoji-photos.release.xcconfig */,
+				49FD38FDEA5AE69D3BF5B0F0 /* Pods-artmoji.debug.xcconfig */,
+				FB0EA536C65BDBBDBA036CAD /* Pods-artmoji.release.xcconfig */,
+				93F8FAEDEF9DAEE43D46F41A /* Pods-artmoji-photos.debug.xcconfig */,
+				ADDBF5007198FCA2DD89184C /* Pods-artmoji-photos.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -154,7 +149,7 @@
 				FA1B01631BCCA8D1002B0B2E /* artmoji-photos */,
 				FA9223051BB4B07A00366238 /* Products */,
 				60E24340947F5871CBF8ADEB /* Frameworks */,
-				B75C172C5C1E4EF1A3A428E0 /* Pods */,
+				89BC06C1DBFE92C16DC0A8DB /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -171,18 +166,16 @@
 			isa = PBXGroup;
 			children = (
 				FA9223091BB4B07A00366238 /* AppDelegate.swift */,
-				FA92230B1BB4B07A00366238 /* ViewController.swift */,
+				FA92230B1BB4B07A00366238 /* MainCameraViewController.swift */,
 				FA92230D1BB4B07A00366238 /* Main.storyboard */,
 				FACB2DC51BD731E300999340 /* Launch.storyboard */,
 				FA9223101BB4B07A00366238 /* Images.xcassets */,
 				FA9223071BB4B07A00366238 /* Supporting Files */,
-				2DBA1E914968982248EC96C8 /* IMCameraViewController.swift */,
 				FA1B017B1BCCAFE6002B0B2E /* IMArtmojiConstants.swift */,
 				FA5167C81BBE129800DC9274 /* IMCreateArtmojiViewController.swift */,
 				2DBA10D785FCCF1459E8B8C9 /* IMCreateArtmojiView.swift */,
 				2DBA1483D66BCD5BEE847242 /* IMCreateArtmojiSelectedImojiView.swift */,
 				2DBA1E3AA9F6388576E01269 /* IMColorSlider.swift */,
-				FAF740151BE0742700CA55D1 /* IMDrawingUtils.swift */,
 			);
 			path = artmoji;
 			sourceTree = "<group>";
@@ -202,12 +195,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FA1B016F1BCCA8D1002B0B2E /* Build configuration list for PBXNativeTarget "artmoji-photos" */;
 			buildPhases = (
-				959F78603A941A62E524B797 /* Check Pods Manifest.lock */,
+				5CE39F5FEAC97F2C9BA72129 /* [CP] Check Pods Manifest.lock */,
 				FA1B015A1BCCA8D1002B0B2E /* Sources */,
 				FA1B015B1BCCA8D1002B0B2E /* Frameworks */,
 				FA1B015C1BCCA8D1002B0B2E /* Resources */,
-				12F133D661A15E60AF25E822 /* Embed Pods Frameworks */,
-				8046145F3AA94665C5B96670 /* Copy Pods Resources */,
+				22813D4296FAFF4A32DC9298 /* [CP] Embed Pods Frameworks */,
+				B9BD942FD1B6066BDDB50EF8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -222,13 +215,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FA9223231BB4B07A00366238 /* Build configuration list for PBXNativeTarget "artmoji" */;
 			buildPhases = (
-				A1077BD99ED8D69C3C2A8257 /* Check Pods Manifest.lock */,
+				A59510E5ABAF2E244578E25C /* [CP] Check Pods Manifest.lock */,
 				FA9223001BB4B07A00366238 /* Sources */,
 				FA9223011BB4B07A00366238 /* Frameworks */,
 				FA9223021BB4B07A00366238 /* Resources */,
 				FA1B01701BCCA8D1002B0B2E /* Embed App Extensions */,
-				D5B0FBCE3849A02A0DCE9198 /* Embed Pods Frameworks */,
-				309FCDF67935378412C7D282 /* Copy Pods Resources */,
+				1C3B2EF274C4FA8EBF5DDAB5 /* [CP] Embed Pods Frameworks */,
+				B2704E497C7AB69A3E581CB8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -253,9 +246,15 @@
 				TargetAttributes = {
 					FA1B015D1BCCA8D1002B0B2E = {
 						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = 8NUM9A48WE;
+						DevelopmentTeamName = "Builds LLC";
+						LastSwiftMigration = 0800;
 					};
 					FA9223031BB4B07A00366238 = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 8NUM9A48WE;
+						DevelopmentTeamName = "Builds LLC";
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -302,14 +301,29 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		12F133D661A15E60AF25E822 /* Embed Pods Frameworks */ = {
+		1C3B2EF274C4FA8EBF5DDAB5 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-artmoji/Pods-artmoji-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		22813D4296FAFF4A32DC9298 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -317,14 +331,44 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-artmoji-photos/Pods-artmoji-photos-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		309FCDF67935378412C7D282 /* Copy Pods Resources */ = {
+		5CE39F5FEAC97F2C9BA72129 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		A59510E5ABAF2E244578E25C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B2704E497C7AB69A3E581CB8 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -332,64 +376,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-artmoji/Pods-artmoji-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8046145F3AA94665C5B96670 /* Copy Pods Resources */ = {
+		B9BD942FD1B6066BDDB50EF8 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-artmoji-photos/Pods-artmoji-photos-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		959F78603A941A62E524B797 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		A1077BD99ED8D69C3C2A8257 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		D5B0FBCE3849A02A0DCE9198 /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-artmoji/Pods-artmoji-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -403,7 +402,6 @@
 				FA1B017A1BCCAE18002B0B2E /* IMColorSlider.swift in Sources */,
 				FA1B01791BCCAE15002B0B2E /* IMCreateArtmojiSelectedImojiView.swift in Sources */,
 				FA1B01651BCCA8D1002B0B2E /* PhotoEditingViewController.swift in Sources */,
-				FAF740171BE0742700CA55D1 /* IMDrawingUtils.swift in Sources */,
 				FA1B01761BCCAE03002B0B2E /* IMCreateArtmojiViewController.swift in Sources */,
 				FA1B01781BCCAE12002B0B2E /* IMCreateArtmojiView.swift in Sources */,
 			);
@@ -413,11 +411,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAF740161BE0742700CA55D1 /* IMDrawingUtils.swift in Sources */,
-				FA92230C1BB4B07A00366238 /* ViewController.swift in Sources */,
+				FA92230C1BB4B07A00366238 /* MainCameraViewController.swift in Sources */,
 				FA5167C91BBE129800DC9274 /* IMCreateArtmojiViewController.swift in Sources */,
 				FA92230A1BB4B07A00366238 /* AppDelegate.swift in Sources */,
-				2DBA102E68C70FE6B7869573 /* IMCameraViewController.swift in Sources */,
 				FA1B017C1BCCAFE6002B0B2E /* IMArtmojiConstants.swift in Sources */,
 				2DBA1B9574F67B608A727854 /* IMCreateArtmojiView.swift in Sources */,
 				2DBA147E7800A7B633E690CB /* IMCreateArtmojiSelectedImojiView.swift in Sources */,
@@ -457,7 +453,7 @@
 /* Begin XCBuildConfiguration section */
 		FA1B016D1BCCA8D1002B0B2E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AEA33833DCBBFA1CB779D17A /* Pods-artmoji-photos.debug.xcconfig */;
+			baseConfigurationReference = 93F8FAEDEF9DAEE43D46F41A /* Pods-artmoji-photos.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -474,12 +470,13 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Artmoji-Bridging-Header.h";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
 		FA1B016E1BCCA8D1002B0B2E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 10939A5C835EB0FA72B95D7E /* Pods-artmoji-photos.release.xcconfig */;
+			baseConfigurationReference = ADDBF5007198FCA2DD89184C /* Pods-artmoji-photos.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PREFIX_HEADER = "";
@@ -494,6 +491,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Artmoji-Bridging-Header.h";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -587,7 +585,7 @@
 		};
 		FA9223241BB4B07A00366238 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8882E5445C380967FA7CA055 /* Pods-artmoji.debug.xcconfig */;
+			baseConfigurationReference = 49FD38FDEA5AE69D3BF5B0F0 /* Pods-artmoji.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -602,6 +600,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sopressata.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Artmoji-Bridging-Header.h";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "Pods/**";
 			};
@@ -609,7 +608,7 @@
 		};
 		FA9223251BB4B07A00366238 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 90FB88C9A789D5424DD1CA48 /* Pods-artmoji.release.xcconfig */;
+			baseConfigurationReference = FB0EA536C65BDBBDBA036CAD /* Pods-artmoji.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -624,6 +623,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sopressata.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Artmoji-Bridging-Header.h";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "Pods/**";
 			};

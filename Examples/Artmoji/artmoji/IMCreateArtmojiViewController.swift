@@ -77,7 +77,7 @@ public class IMCreateArtmojiViewController: UIViewController {
     // Mark: - Buton action methods
     #if NOT_PHOTO_EXTENSION
     func collectionViewControllerCreateImojiButtonTapped() {
-        let cameraViewController = IMCameraViewController(session: self.session, imageBundle: self.imageBundle, controllerType: IMArtmojiConstants.PresentingViewControllerType.CreateImoji)
+        let cameraViewController = MainCameraViewController(session: self.session, imageBundle: self.imageBundle)
         cameraViewController.modalPresentationStyle = UIModalPresentationStyle.FullScreen
         cameraViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         cameraViewController.delegate = self
@@ -91,7 +91,7 @@ public class IMCreateArtmojiViewController: UIViewController {
         UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
         let context = UIGraphicsGetCurrentContext()
         
-        CGContextSetBlendMode(context, CGBlendMode.Normal)
+        CGContextSetBlendMode(context!, CGBlendMode.Normal)
         
         let shadowSize: CGFloat = 1.5
         let cornerRadius: CGFloat = 2.5
@@ -126,7 +126,7 @@ public class IMCreateArtmojiViewController: UIViewController {
         let layer = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return layer
+        return layer!
     }
 
 
@@ -176,7 +176,7 @@ extension IMCreateArtmojiViewController: IMCreateArtmojiViewDelegate {
         // Prevent multiple saves of the same image
         self.createArtmojiView.shareButton.userInteractionEnabled = false;
         
-        UIImageWriteToSavedPhotosAlbum(artmoji, self, "image:didFinishSavingWithError:contextInfo:", nil)
+        UIImageWriteToSavedPhotosAlbum(artmoji, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
     }
 
     public func userDidSelectImojiCollectionButtonFromArtmojiView(view: IMCreateArtmojiView) {
@@ -192,7 +192,7 @@ extension IMCreateArtmojiViewController: IMCreateArtmojiViewDelegate {
         
         #if NOT_PHOTO_EXTENSION
         let createImojiImage = drawCreateImojiButtonImage().imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        collectionViewController.bottomToolbar.addBarButton(UIBarButtonItem(image: createImojiImage, style: UIBarButtonItemStyle.Plain, target: self, action: "collectionViewControllerCreateImojiButtonTapped"))
+        collectionViewController.bottomToolbar.addBarButton(UIBarButtonItem(image: createImojiImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(collectionViewControllerCreateImojiButtonTapped)))
         #endif
         
         collectionViewController.bottomToolbar.addToolbarButtonWithType(IMToolbarButtonType.Reactions)
@@ -205,7 +205,8 @@ extension IMCreateArtmojiViewController: IMCreateArtmojiViewDelegate {
         collectionViewController.collectionView.infiniteScroll = true
         collectionViewController.collectionView.collectionViewDelegate = self
         collectionViewController.collectionViewControllerDelegate = self
-
+        collectionViewController.searchView.delegate = self
+        
         presentViewController(collectionViewController, animated: true) { finished in
             #if !NOT_PHOTO_EXTENSION
             collectionViewController.topToolbar.mas_makeConstraints { make in
@@ -238,9 +239,6 @@ extension IMCreateArtmojiViewController: IMToolbarDelegate {
                 let collectionViewController = presentedViewController as! IMCollectionViewController
                 collectionViewController.collectionView.loadImojiCategoriesWithOptions(IMCategoryFetchOptions.init(classification: IMImojiSessionCategoryClassification.Generic))
                 break
-            case IMToolbarButtonType.Back:
-                dismissViewControllerAnimated(true, completion: nil)
-                break
             default:
                 break
         }
@@ -254,27 +252,52 @@ extension IMCreateArtmojiViewController: IMCameraViewControllerDelegate {
         viewController.dismissViewControllerAnimated(true, completion: nil)
     }
 
-    public func userDidFinishCreatingImoji(imoji: IMImojiObject, fromCameraViewController viewController: IMCameraViewController) {
-        createArtmojiView.addImoji(imoji)
+    public func userDidCaptureImage(image: UIImage, metadata: NSDictionary?, fromCameraViewController viewController: IMCameraViewController) {
+        let createImojiViewController = IMCreateImojiViewController(sourceImage: image, session: self.session)
+        createImojiViewController.createDelegate = self
+        viewController.presentViewController(createImojiViewController, animated: false, completion: nil)
+    }
+    
+    public func userDidPickImage(image: UIImage, editingInfo: [NSObject : AnyObject]?, fromImagePickerController picker: UIImagePickerController) {
+        let createImojiViewController = IMCreateImojiViewController(sourceImage: image, session: self.session)
+        createImojiViewController.createDelegate = self
+        createImojiViewController.modalPresentationStyle = UIModalPresentationStyle.FullScreen
+        createImojiViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        picker.presentViewController(createImojiViewController, animated: true, completion: nil)
     }
 }
 #endif
 
-// MARK: - IMCollectionViewControllerDelegate
-extension IMCreateArtmojiViewController: IMCollectionViewControllerDelegate {
-    public func backgroundColorForCollectionViewController(collectionViewController: UIViewController) -> UIColor? {
-        return IMArtmojiConstants.DefaultBarTintColor
+// MARK: - IMCreateImojiViewControllerDelegate
+extension IMCreateArtmojiViewController: IMCreateImojiViewControllerDelegate {
+    public func imojiUploadDidComplete(localImoji: IMImojiObject, persistentImoji: IMImojiObject?, withError error: NSError?, fromViewController viewController: IMCreateImojiViewController) {
+        if error == nil {
+            createArtmojiView.addImoji(persistentImoji!)
+        }
     }
     
+    public func userDidCancelImageEdit(viewController: IMCreateImojiViewController) {
+        viewController.dismissViewControllerAnimated(false, completion: nil)
+    }
+}
+
+// MARK: - IMCollectionViewControllerDelegate
+extension IMCreateArtmojiViewController: IMCollectionViewControllerDelegate {
     public func userDidSelectSplash(splashType: IMCollectionViewSplashCellType, fromCollectionView collectionView: IMCollectionView) {
         switch splashType {
             case IMCollectionViewSplashCellType.NoResults:
                 let collectionViewController = presentedViewController as! IMCollectionViewController
-                collectionViewController.searchField.becomeFirstResponder();
+                collectionViewController.searchView.searchTextField.becomeFirstResponder()
                 break;
             default:
                 break;
         }
+    }
+}
+
+extension IMCreateArtmojiViewController: IMSearchViewDelegate {
+    public func userDidTapBackButtonFromSearchView(searchView: IMSearchView!) {
+        dismissViewControllerAnimated(true, completion: nil)
     }
 }
 
