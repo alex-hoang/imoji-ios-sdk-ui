@@ -1,5 +1,9 @@
 # Imoji iOS UI Widgets Changes
 
+### Version 2.2.0
+
+* Adds support for loading iOS 10 sticker objects in IMCollectionView! Just set loadUsingStickerViews to YES for you IMCollectionView instance. Both still and animated content is supported.
+
 ### Version 2.1.2
 
 * Fixes a crash with the no recents splash
