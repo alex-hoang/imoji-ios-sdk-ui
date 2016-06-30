@@ -37,6 +37,10 @@
 #import "IMCategoryAttribution.h"
 #import "IMCollectionLoadingView.h"
 
+#if IMMessagesFrameworkSupported
+#import <Messages/Messages.h>
+#endif
+
 NSUInteger const IMCollectionViewNumberOfItemsToLoad = 60;
 CGFloat const IMCollectionReusableHeaderViewDefaultHeight = 49.0f;
 CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
@@ -50,6 +54,7 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
 @property(nonatomic, strong) UITapGestureRecognizer *tapGesture;
 @property(nonatomic, strong) NSObject *loadingIndicatorObject;
 @property(nonatomic, strong) NSOperation *imojiOperation;
+@property(nonatomic, strong, nonnull) IMImojiObjectRenderingOptions *animatedGifRenderingOptions;
 
 @property(nonatomic, copy) NSString *currentSearchTerm;
 @property(nonatomic, copy) NSString *currentHeader;
@@ -75,6 +80,8 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
         _renderingOptions = [IMImojiObjectRenderingOptions optionsWithRenderSize:IMImojiObjectRenderSizeThumbnail
                                                                      borderStyle:IMImojiObjectBorderStyleSticker
                                                                      imageFormat:IMImojiObjectImageFormatWebP];
+        _animatedGifRenderingOptions = [IMImojiObjectRenderingOptions optionsWithAnimationAndRenderSize:IMImojiObjectRenderSizeThumbnail];
+        
         _renderingOptions.renderAnimatedIfSupported = YES;
         _preferredImojiDisplaySize = CGSizeMake(100.f, 114.f);
         _animateSelection = YES;
@@ -269,15 +276,24 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
         return splashCell;
         
     } else {
-        IMCollectionViewCell *cell =
-                (IMCollectionViewCell *) [self dequeueReusableCellWithReuseIdentifier:IMCollectionViewCellReuseId forIndexPath:indexPath];
+        IMCollectionViewCell *cell = [self dequeueReusableCellWithReuseIdentifier:IMCollectionViewCellReuseId forIndexPath:indexPath];
         [cell setupPlaceholderImageWithPosition:(NSUInteger) indexPath.row];
 
         id imojiImage = self.images[(NSUInteger) indexPath.section][(NSUInteger) indexPath.row];
         if ([imojiImage isKindOfClass:[UIImage class]]) {
-            [cell loadImojiImage:((UIImage *) imojiImage)];
+            [cell loadImojiImage:((UIImage *) imojiImage) animated:YES];
+        } else if (self.loadUsingStickerViews) {
+#if IMMessagesFrameworkSupported
+            if ([imojiImage isKindOfClass:[MSSticker class]]) {
+                [cell loadImojiSticker:imojiImage animated:YES];
+            } else {
+                [cell loadImojiSticker:nil animated:YES];
+            }
+#else
+            [cell loadImojiImage:nil animated:YES];
+#endif
         } else {
-            [cell loadImojiImage:nil];
+            [cell loadImojiImage:nil animated:YES];
         }
 
         return cell;
@@ -346,7 +362,23 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
             [self loadNextPageOfImojisFromSearch];
         });
     }
+
+#if IMMessagesFrameworkSupported
+    if (self.loadUsingStickerViews && [cell isKindOfClass:[IMCollectionViewCell class]]) {
+        IMCollectionViewCell *viewCell = (IMCollectionViewCell *) cell;
+        [viewCell animateCellContents:YES];
+    }
+#endif
 }
+
+#if IMMessagesFrameworkSupported
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.loadUsingStickerViews && [cell isKindOfClass:[IMCollectionViewCell class]]) {
+        IMCollectionViewCell *viewCell = (IMCollectionViewCell *) cell;
+        [viewCell animateCellContents:NO];
+    }
+}
+#endif
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // check to see if the user is at the end of the scrollview
@@ -1005,29 +1037,65 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)renderImojiResult:(IMImojiObject *)imoji
-                  content:(id)content
+                  content:(NSObject *)content
                 atSection:(NSUInteger)section
                   atIndex:(NSUInteger)index
                    offset:(NSUInteger)offset
                 operation:(NSOperation *)operation {
     self.content[section][@"imojis"][index + offset] = content;
-    [self.session renderImoji:imoji
-                      options:self.renderingOptions
-                     callback:^(UIImage *image, NSError *renderError) {
-                         if (!operation.isCancelled) {
-                             self.images[section][index + offset] = image ? image : [NSNull null];
-                             NSIndexPath *newPath = [NSIndexPath indexPathForItem:(index + offset) inSection:section];
 
-                             BOOL doReload = self.pendingCollectionViewUpdates.count == 0;
-                             [self.pendingCollectionViewUpdates addObject:newPath];
+    if (self.loadUsingStickerViews && [content isKindOfClass:[IMImojiObject class]]) {
+        IMImojiObjectRenderingOptions *options;
 
-                             // if the pending collection view list was empty, go ahead and call the reload method, otherwise, allow
-                             // the method to perform the reload after the last batch update completes
-                             if (doReload) {
-                                 [self reloadPendingUpdatesWithOperation:operation];
+        // use the gif rendering options to avoid converting webp data to NSData for MSSticker's, avoids unnecessary conversion
+        if (imoji.supportsAnimation) {
+            options = self.animatedGifRenderingOptions;
+        } else {
+            options = self.renderingOptions;
+        }
+
+        [self.session renderImojiAsMSSticker:imoji
+                                     options:options
+                                    callback:^(NSObject *msStickerObject, NSError *error) {
+                                        if (!operation.isCancelled) {
+                                            [self setImageContents:msStickerObject
+                                                         atSection:section
+                                                           atIndex:index
+                                                            offset:offset
+                                                         operation:operation];
+                                        }
+                                    }];
+    } else {
+        [self.session renderImoji:imoji
+                          options:self.renderingOptions
+                         callback:^(UIImage *image, NSError *renderError) {
+                             if (!operation.isCancelled) {
+                                 [self setImageContents:image
+                                              atSection:section
+                                                atIndex:index
+                                                 offset:offset
+                                              operation:operation];
                              }
-                         }
-                     }];
+                         }];
+    }
+}
+
+- (void)setImageContents:(id)content
+               atSection:(NSUInteger)section
+                 atIndex:(NSUInteger)index
+                  offset:(NSUInteger)offset
+               operation:(NSOperation *)operation {
+    self.images[section][index + offset] = content ? content : [NSNull null];
+    NSIndexPath *newPath = [NSIndexPath indexPathForItem:(index + offset) inSection:section];
+
+    BOOL doReload = self.pendingCollectionViewUpdates.count == 0;
+    [self.pendingCollectionViewUpdates addObject:newPath];
+
+    // if the pending collection view list was empty, go ahead and call the reload method, otherwise, allow
+    // the method to perform the reload after the last batch update completes
+    if (doReload) {
+        [self reloadPendingUpdatesWithOperation:operation];
+    }
 }
 
 - (void)reloadPendingUpdatesWithOperation:(NSOperation *)operation {
@@ -1106,12 +1174,24 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)setRenderingOptions:(IMImojiObjectRenderingOptions *)renderingOptions {
     _renderingOptions = renderingOptions;
+    _animatedGifRenderingOptions =
+            [IMImojiObjectRenderingOptions optionsWithAnimationAndRenderSize:renderingOptions.renderSize];
     [self reloadData];
 }
 
 - (void)setImagesBundle:(NSBundle *)imagesBundle {
     _imagesBundle = imagesBundle;
     [self reloadData];
+}
+
+- (void)setLoadUsingStickerViews:(BOOL)loadUsingStickerViews {
+#if IMMessagesFrameworkSupported
+    _loadUsingStickerViews = loadUsingStickerViews && NSClassFromString(@"MSSticker");
+#else
+    [[NSException exceptionWithName:@"imoji runtime exception"
+                            reason:@"sticker views are only supported with iOS 10 builds and higher"
+                          userInfo:nil] raise];
+#endif
 }
 
 - (void)setContentType:(IMCollectionViewContentType)contentType {

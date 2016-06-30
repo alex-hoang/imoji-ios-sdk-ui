@@ -90,6 +90,11 @@ extern NSUInteger const IMCollectionViewNumberOfItemsToLoad;
 @property(nonatomic) BOOL infiniteScroll;
 
 /**
+ * @abstract Whether or not use iOS 10's MSStickerViews to display Imoji stickers
+*/
+@property(nonatomic) BOOL loadUsingStickerViews;
+
+/**
  * @abstract Indicates that the current view is loading. Only for the initial view.
  * Subsequent loading views, such as loading the next page of results within a category,
  * are handled by IMCollectionViewStatusCell.
