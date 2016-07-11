@@ -26,6 +26,7 @@
 #import <Masonry/Masonry.h>
 #import <ImojiSDKUI/IMCollectionViewController.h>
 #import <ImojiSDKUI/IMCategoryCollectionViewCell.h>
+#import <ImojiSDKUI/IMResourceBundleUtil.h>
 #import <ImojiSDK/IMImojiCategoryObject.h>
 #import <ImojiSDK/IMImojiObject.h>
 
@@ -35,11 +36,12 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
 
 #if __has_include(<ImojiGraphics/ImojiGraphics.h>) && __has_include(<ImojiSDKUI/IMCreateImojiViewController.h>) && !defined(IMOJI_APP_EXTENSION)
 #define IMOJI_EDITOR_ENABLED 1
+#import <ImojiSDKUI/ImojiSDKUI-Swift.h>
 #import <ImojiSDKUI/IMCreateImojiViewController.h>
 
 @interface IMCollectionViewController () <IMSearchViewDelegate, IMToolbarDelegate, IMCollectionViewControllerDelegate,
         UIViewControllerPreviewingDelegate, UIActionSheetDelegate, IMCreateImojiViewControllerDelegate,
-        UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+        IMCameraViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 #else
 #define IMOJI_EDITOR_ENABLED 0
@@ -307,6 +309,14 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
 - (void)userDidTapCreateButtonFromSearchView:(IMSearchView *)searchView {
     if(NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_8_0) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:@"Take Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            IMCameraViewController *cameraViewController = [[IMCameraViewController alloc] initWithSession:self.session imageBundle:[IMResourceBundleUtil assetsBundle]];
+            cameraViewController.delegate = self;
+            cameraViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
+            
+            [self presentViewController:cameraViewController animated:YES completion:nil];
+        }]];
 
         [alertController addAction:[UIAlertAction actionWithTitle:@"Photo Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
@@ -405,6 +415,16 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
 }
 
 #if IMOJI_EDITOR_ENABLED
+
+#pragma mark IMCameraViewControllerDelegate
+
+- (void)userDidCaptureImage:(UIImage *)image metadata:(NSDictionary *)metadata fromCameraViewController:(IMCameraViewController *)viewController {
+    IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session: self.session];
+    createImojiViewController.createDelegate = self;
+    createImojiViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+    createImojiViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [viewController presentViewController:createImojiViewController animated: true completion: nil];
+}
 
 #pragma mark UIImagePickerControllerDelegate
 
