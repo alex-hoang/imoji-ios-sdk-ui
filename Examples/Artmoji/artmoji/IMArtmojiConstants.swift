@@ -24,10 +24,8 @@
 //
 
 struct IMArtmojiConstants {
-    static let NavigationBarHeight: CGFloat = 82.0
     static let DefaultButtonTopOffset: CGFloat = 30.0
     static let CaptureButtonBottomOffset: CGFloat = 20.0
-    static let CameraViewBottomButtonBottomOffset: CGFloat = 28.0
 
     static let CreateArtmojiViewTopButtonTopOffset: CGFloat = 42.0
     static let CreateArtmojiViewTopButtonEdgeOffset: CGFloat = 26.0

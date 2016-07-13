@@ -28,27 +28,38 @@ import ImojiSDKUI
 
 class MainCameraViewController: IMCameraViewController {
     // MARK: - Object lifecycle
-    override init(session: IMImojiSession, imageBundle: NSBundle) {
-        super.init(session: session, imageBundle: imageBundle)
+    override init(session: IMImojiSession) {
+        super.init(session: session)
         
         delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(session: IMImojiSession(), imageBundle: IMResourceBundleUtil.assetsBundle())
+        super.init(session: IMImojiSession())
         
         delegate = self
+    }
+    
+    override func loadView() {
+        super.loadView()
+        
+        let cancelButtonView = cancelButton?.customView as? UIButton
+        cancelButtonView?.setImage(UIImage(named: "Artmoji-Cancel"), forState: UIControlState.Normal)
+        captureButton?.setImage(UIImage(named: "Artmoji-Circle"), forState: UIControlState.Normal)
+        flipButton?.setImage(UIImage(named: "Artmoji-Camera-Flip"), forState: UIControlState.Normal)
+        photoLibraryButton?.setImage(UIImage(named: "Artmoji-Photo-Library"), forState: UIControlState.Normal)
     }
 }
 
 extension MainCameraViewController: IMCameraViewControllerDelegate {
-    func userDidCaptureImage(image: UIImage, metadata: NSDictionary?, fromCameraViewController viewController: IMCameraViewController) {
-        let createArtmojiViewController = IMCreateArtmojiViewController(sourceImage: image, capturedImageOrientation: self.currentOrientation, session: self.session, imageBundle: self.imageBundle)
+    func userDidCaptureImage(image: UIImage, metadata: [NSObject : AnyObject], fromCameraViewController viewController: IMCameraViewController) {
+        let createArtmojiViewController = IMCreateArtmojiViewController(sourceImage: image, capturedImageOrientation: self.currentOrientation, session: self.session, imageBundle: IMResourceBundleUtil.assetsBundle())
         presentViewController(createArtmojiViewController, animated: false, completion: nil)
     }
     
-    func userDidPickImage(image: UIImage, editingInfo: [NSObject : AnyObject]?, fromImagePickerController picker: UIImagePickerController) {
-        let createArtmojiViewController = IMCreateArtmojiViewController(sourceImage: image, capturedImageOrientation: nil, session: self.session, imageBundle: self.imageBundle)
+    func userDidPickMediaWithInfo(info: [String : AnyObject], fromImagePickerController picker: UIImagePickerController) {
+        let image = info["UIImagePickerControllerOriginalImage"] as! UIImage;
+        let createArtmojiViewController = IMCreateArtmojiViewController(sourceImage: image, capturedImageOrientation: nil, session: self.session, imageBundle: IMResourceBundleUtil.assetsBundle())
         createArtmojiViewController.modalPresentationStyle = UIModalPresentationStyle.FullScreen
         createArtmojiViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         picker.presentViewController(createArtmojiViewController, animated: true, completion: nil)

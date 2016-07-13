@@ -204,7 +204,7 @@ public class IMCreateArtmojiView: UIView {
         // Draw the plus image on top of the circle image and center it horizontally and vertically
         let circleImage = UIImage(named: "Artmoji-Circle")!
         let plusImage = UIImage(named: "Artmoji-Add-Imoji")!
-        let imojiCollectionImage = IMDrawingUtils().drawImage(image: plusImage, withinImage: circleImage,
+        let imojiCollectionImage = IMDrawingUtils.drawImage(image: plusImage, withinImage: circleImage,
             atPoint: CGPointMake((circleImage.size.width - plusImage.size.width) / 2.0, (circleImage.size.height - plusImage.size.height) / 2.0))
         
         imojiCollectionButton = UIButton(type: UIButtonType.Custom)
@@ -756,7 +756,7 @@ public class IMCreateArtmojiView: UIView {
 
         // Draw the pencil on top of the preview and center it horizontally
         let pencilImage = UIImage(named: "Artmoji-Draw")!
-        brushColorPreview.setImage(IMDrawingUtils().drawImage(image: pencilImage, withinImage: brushColorPreview.imageForState(UIControlState.Normal)!,
+        brushColorPreview.setImage(IMDrawingUtils.drawImage(image: pencilImage, withinImage: brushColorPreview.imageForState(UIControlState.Normal)!,
             atPoint: CGPointMake(brushColorPreview.imageForState(UIControlState.Normal)!.size.width / 2.0, 0)),
             forState: UIControlState.Normal)
 

@@ -38,6 +38,7 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
 #define IMOJI_EDITOR_ENABLED 1
 #import <ImojiSDKUI/ImojiSDKUI-Swift.h>
 #import <ImojiSDKUI/IMCreateImojiViewController.h>
+#import <ImojiSDKUI/IMCameraViewController.h>
 
 @interface IMCollectionViewController () <IMSearchViewDelegate, IMToolbarDelegate, IMCollectionViewControllerDelegate,
         UIViewControllerPreviewingDelegate, UIActionSheetDelegate, IMCreateImojiViewControllerDelegate,
@@ -311,7 +312,7 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         
         [alertController addAction:[UIAlertAction actionWithTitle:@"Take Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            IMCameraViewController *cameraViewController = [[IMCameraViewController alloc] initWithSession:self.session imageBundle:[IMResourceBundleUtil assetsBundle]];
+            IMCameraViewController *cameraViewController = [IMCameraViewController imojiCameraViewControllerWithSession:self.session];
             cameraViewController.delegate = self;
             cameraViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
             
@@ -418,12 +419,25 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
 
 #pragma mark IMCameraViewControllerDelegate
 
+- (void)userDidCancelCameraViewController:(IMCameraViewController *)viewController {
+    [viewController dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)userDidCaptureImage:(UIImage *)image metadata:(NSDictionary *)metadata fromCameraViewController:(IMCameraViewController *)viewController {
     IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session: self.session];
     createImojiViewController.createDelegate = self;
     createImojiViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     createImojiViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [viewController presentViewController:createImojiViewController animated: true completion: nil];
+}
+
+- (void)userDidPickMediaWithInfo:(NSDictionary<NSString *, id> *__nonnull)info fromImagePickerController:(UIImagePickerController *)picker {
+    UIImage *image = info[@"UIImagePickerControllerOriginalImage"];
+    IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session: self.session];
+    createImojiViewController.createDelegate = self;
+    createImojiViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+    createImojiViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [picker presentViewController:createImojiViewController animated: true completion: nil];
 }
 
 #pragma mark UIImagePickerControllerDelegate

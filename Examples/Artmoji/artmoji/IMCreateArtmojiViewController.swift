@@ -77,7 +77,7 @@ public class IMCreateArtmojiViewController: UIViewController {
     // Mark: - Buton action methods
     #if NOT_PHOTO_EXTENSION
     func collectionViewControllerCreateImojiButtonTapped() {
-        let cameraViewController = MainCameraViewController(session: self.session, imageBundle: self.imageBundle)
+        let cameraViewController = MainCameraViewController(session: self.session)
         cameraViewController.modalPresentationStyle = UIModalPresentationStyle.FullScreen
         cameraViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         cameraViewController.delegate = self
@@ -251,14 +251,15 @@ extension IMCreateArtmojiViewController: IMCameraViewControllerDelegate {
     public func userDidCancelCameraViewController(viewController: IMCameraViewController) {
         viewController.dismissViewControllerAnimated(true, completion: nil)
     }
-
-    public func userDidCaptureImage(image: UIImage, metadata: NSDictionary?, fromCameraViewController viewController: IMCameraViewController) {
+    
+    public func userDidCaptureImage(image: UIImage, metadata: [NSObject : AnyObject], fromCameraViewController viewController: IMCameraViewController) {
         let createImojiViewController = IMCreateImojiViewController(sourceImage: image, session: self.session)
         createImojiViewController.createDelegate = self
         viewController.presentViewController(createImojiViewController, animated: false, completion: nil)
     }
-    
-    public func userDidPickImage(image: UIImage, editingInfo: [NSObject : AnyObject]?, fromImagePickerController picker: UIImagePickerController) {
+
+    public func userDidPickMediaWithInfo(info: [String : AnyObject], fromImagePickerController picker: UIImagePickerController) {
+        let image = info["UIImagePickerControllerOriginalImage"] as! UIImage;
         let createImojiViewController = IMCreateImojiViewController(sourceImage: image, session: self.session)
         createImojiViewController.createDelegate = self
         createImojiViewController.modalPresentationStyle = UIModalPresentationStyle.FullScreen

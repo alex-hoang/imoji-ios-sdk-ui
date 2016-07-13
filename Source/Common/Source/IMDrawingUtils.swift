@@ -25,12 +25,12 @@
 
 import UIKit
 
-public class IMDrawingUtils {
-    public init() {
+@objc public class IMDrawingUtils: NSObject {
+    override private init() {
         
     }
     
-    public func flipImage(image: UIImage) -> UIImage {
+    public class func flipImage(image: UIImage) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
         let context = UIGraphicsGetCurrentContext()
 
@@ -45,7 +45,7 @@ public class IMDrawingUtils {
     }
 
     // Render an image within an image at a specific point.
-    public func drawImage(image foreground: UIImage, withinImage background: UIImage, atPoint: CGPoint) -> UIImage {
+    public class func drawImage(image foreground: UIImage, withinImage background: UIImage, atPoint: CGPoint) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(background.size, false, background.scale)
         background.drawInRect(CGRectMake(0, 0, background.size.width, background.size.height))
         foreground.drawInRect(CGRectMake(atPoint.x, atPoint.y, foreground.size.width, foreground.size.height))

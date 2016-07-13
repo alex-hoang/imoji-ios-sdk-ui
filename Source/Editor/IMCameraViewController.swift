@@ -38,19 +38,13 @@ struct IMCameraViewControllerConstants {
 @objc public protocol IMCameraViewControllerDelegate {
     optional func userDidCancelCameraViewController(viewController: IMCameraViewController)
     optional func userDidCaptureImage(image: UIImage, metadata: NSDictionary?, fromCameraViewController viewController: IMCameraViewController)
-    optional func userDidPickImage(image: UIImage, editingInfo: [NSObject : AnyObject]?, fromImagePickerController picker: UIImagePickerController)
+    optional func userDidPickMediaWithInfo(info: [String : AnyObject], fromImagePickerController picker: UIImagePickerController)
 }
 
-public class IMCameraViewController: UIViewController {
-    
-    static let NavigationBarHeight: CGFloat = 82.0
-    static let DefaultButtonTopOffset: CGFloat = 30.0
-    static let CaptureButtonBottomOffset: CGFloat = 20.0
-    static let CameraViewBottomButtonBottomOffset: CGFloat = 28.0
+@objc public class IMCameraViewController: UIViewController {
 
     // Required init variables
     private(set) public var session: IMImojiSession!
-    private(set) public var imageBundle: NSBundle
 
     // AVFoundation variables
     private var captureSession: AVCaptureSession!
@@ -72,16 +66,12 @@ public class IMCameraViewController: UIViewController {
     private var flipButton: UIButton!
     private var photoLibraryButton: UIButton!
 
-    // Controller type to present when picture is taken or used from photo library
-//    private var presentingViewControllerType: Int
-
     // Delegate object
     public var delegate: IMCameraViewControllerDelegate?
 
     // MARK: - Object lifecycle
-    public init(session: IMImojiSession, imageBundle: NSBundle) {
+    public init(session: IMImojiSession) {
         self.session = session
-        self.imageBundle = imageBundle
         super.init(nibName: nil, bundle: nil)
 
         // Create queue for AVCaptureSession
@@ -100,23 +90,26 @@ public class IMCameraViewController: UIViewController {
 
         // Set up toolbar buttons
         captureButton = UIButton(type: UIButtonType.Custom)
-        captureButton.setImage(UIImage(named: "Artmoji-Circle"), forState: UIControlState.Normal)
         captureButton.addTarget(self, action: #selector(captureButtonTapped), forControlEvents: UIControlEvents.TouchUpInside)
 
         let cancelButton = UIButton(type: UIButtonType.Custom)
-        cancelButton.setImage(UIImage(named: "Artmoji-Cancel"), forState: UIControlState.Normal)
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), forControlEvents: UIControlEvents.TouchUpInside)
         cancelButton.imageEdgeInsets = UIEdgeInsetsMake(6.25, 6.25, 6.25, 6.25)
         cancelButton.frame = CGRectMake(0, 0, 50, 50)
         self.cancelButton = UIBarButtonItem(customView: cancelButton)
 
         flipButton = UIButton(type: UIButtonType.Custom)
-        flipButton.setImage(UIImage(named: "Artmoji-Camera-Flip"), forState: UIControlState.Normal)
         flipButton.addTarget(self, action: #selector(flipButtonTapped), forControlEvents: UIControlEvents.TouchUpInside)
 
         photoLibraryButton = UIButton(type: UIButtonType.Custom)
-        photoLibraryButton.setImage(UIImage(named: "Artmoji-Photo-Library"), forState: UIControlState.Normal)
         photoLibraryButton.addTarget(self, action: #selector(photoLibraryButtonTapped), forControlEvents: UIControlEvents.TouchUpInside)
+        
+        if let bundlePath = NSBundle.init(forClass: IMCameraViewController.self).pathForResource("ImojiEditorAssets", ofType: "bundle") {
+            captureButton.setImage(UIImage(contentsOfFile: String(format: "%@/camera_button.png", bundlePath)), forState: UIControlState.Normal)
+            cancelButton.setImage(UIImage(contentsOfFile: String(format: "%@/camera_cancel.png", bundlePath)), forState: UIControlState.Normal)
+            flipButton.setImage(UIImage(contentsOfFile: String(format: "%@/camera_flipcam.png", bundlePath)), forState: UIControlState.Normal)
+            photoLibraryButton.setImage(UIImage(contentsOfFile: String(format: "%@/camera_photos.png", bundlePath)), forState: UIControlState.Normal)
+        }
 
         // Set up top nav bar
         navigationBar = UIToolbar()
@@ -326,7 +319,7 @@ public class IMCameraViewController: UIViewController {
                         }
 
                         dispatch_async(dispatch_get_main_queue()) {
-                            self.delegate?.userDidCaptureImage?(image, metadata: metadata, fromCameraViewController: self)
+                            self.delegate?.userDidCaptureImage?(image, metadata: metadata!, fromCameraViewController: self)
                         }
                     }
                 } else {
@@ -401,8 +394,8 @@ public class IMCameraViewController: UIViewController {
 
 // MARK: - UIImagePickerControllerDelegate
 extension IMCameraViewController: UIImagePickerControllerDelegate {
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
-        delegate?.userDidPickImage?(image, editingInfo: editingInfo, fromImagePickerController: picker)
+    public func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        delegate?.userDidPickMediaWithInfo?(info, fromImagePickerController: picker)
     }
 }
 

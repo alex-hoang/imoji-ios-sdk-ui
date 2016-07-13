@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
 
     ss.ios.resource_bundles = {'ImojiEditorAssets' => ['Source/Editor/Resources/Icons/*.png', 'Source/Editor/Resources/Images/*.png']}
   
-    ss.ios.source_files = 'Source/Editor/**/*.{h,m,swift}'
+    ss.ios.source_files = 'Source/Editor/**/*.{h,m}'
     ss.ios.public_header_files = 'Source/Editor/*.h'
     ss.ios.frameworks = ["Accelerate", "GLKit", "AVFoundation", "CoreMotion"]
     ss.libraries = 'c++'

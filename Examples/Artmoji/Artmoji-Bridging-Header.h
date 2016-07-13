@@ -27,6 +27,7 @@
 #define artmoji_Artmoji_Bridging_Header_h
 
 #import "ImojiSDK/ImojiSDK.h"
+#import "ImojiSDKUI/IMCameraViewController.h"
 #import "ImojiSDKUI/IMCollectionViewController.h"
 #import "ImojiSDKUI/IMCreateImojiViewController.h"
 #import "ImojiSDKUI/IMCreateImojiView.h"
