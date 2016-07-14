@@ -441,7 +441,8 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
 
 #pragma mark UIImagePickerControllerDelegate
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo {
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    UIImage *image = info[@"UIImagePickerControllerOriginalImage"];
     IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session: self.session];
     createImojiViewController.createDelegate = self;
     createImojiViewController.modalPresentationStyle = UIModalPresentationFullScreen;
