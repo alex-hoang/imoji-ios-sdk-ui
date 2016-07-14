@@ -91,13 +91,13 @@ public class IMColorSlider: UISlider {
         let context = UIGraphicsGetCurrentContext()
         colorView.image?.drawInRect(CGRect(x: 0, y: 0, width: colorView.frame.size.width, height: colorView.frame.size.height))
         for i in 0...Int(IMArtmojiConstants.SliderWidth) {
-            CGContextMoveToPoint(context, CGFloat(i), frame.size.height / 2.0)
-            CGContextAddLineToPoint(context, CGFloat(i), frame.size.height / 2.0)
-            CGContextSetLineCap(context, CGLineCap.Round)
-            CGContextSetLineWidth(context, 8.0)
-            CGContextSetStrokeColorWithColor(context, UIColor(hue: CGFloat(i) / IMArtmojiConstants.SliderWidth, saturation: 1.0, brightness: 1.0, alpha: 1.0).CGColor)
-            CGContextSetBlendMode(context, CGBlendMode.Normal)
-            CGContextStrokePath(context)
+            CGContextMoveToPoint(context!, CGFloat(i), frame.size.height / 2.0)
+            CGContextAddLineToPoint(context!, CGFloat(i), frame.size.height / 2.0)
+            CGContextSetLineCap(context!, CGLineCap.Round)
+            CGContextSetLineWidth(context!, 8.0)
+            CGContextSetStrokeColorWithColor(context!, UIColor(hue: CGFloat(i) / IMArtmojiConstants.SliderWidth, saturation: 1.0, brightness: 1.0, alpha: 1.0).CGColor)
+            CGContextSetBlendMode(context!, CGBlendMode.Normal)
+            CGContextStrokePath(context!)
         }
 
         colorView.image = UIGraphicsGetImageFromCurrentImageContext()

@@ -27,12 +27,13 @@
 #define artmoji_Artmoji_Bridging_Header_h
 
 #import "ImojiSDK/ImojiSDK.h"
+#import "ImojiSDKUI/IMCameraViewController.h"
 #import "ImojiSDKUI/IMCollectionViewController.h"
 #import "ImojiSDKUI/IMCreateImojiViewController.h"
 #import "ImojiSDKUI/IMCreateImojiView.h"
 #import "ImojiSDKUI/IMCreateImojiUITheme.h"
 #import "ImojiSDKUI/IMToolbar.h"
 #import "ImojiSDKUI/IMResourceBundleUtil.h"
-#import "Masonry/Masonry.h"
+#import <Masonry/Masonry.h>
 
 #endif

@@ -2,7 +2,7 @@
 //  ImojiSDKUI
 //
 //  Created by Alex Hoang
-//  Copyright (C) 2015 Imoji
+//  Copyright (C) 2016 Imoji
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to
@@ -24,20 +24,27 @@
 //
 
 import UIKit
-import ImojiSDKUI
 import AVFoundation
 import CoreMotion
+import Masonry
+
+struct IMCameraViewControllerConstants {
+    static let NavigationBarHeight: CGFloat = 82.0
+    static let DefaultButtonTopOffset: CGFloat = 30.0
+    static let CaptureButtonBottomOffset: CGFloat = 20.0
+    static let CameraViewBottomButtonBottomOffset: CGFloat = 28.0
+}
 
 @objc public protocol IMCameraViewControllerDelegate {
     optional func userDidCancelCameraViewController(viewController: IMCameraViewController)
-    optional func userDidFinishCreatingImoji(imoji: IMImojiObject, fromCameraViewController viewController: IMCameraViewController)
+    optional func userDidCaptureImage(image: UIImage, metadata: NSDictionary?, fromCameraViewController viewController: IMCameraViewController)
+    optional func userDidPickMediaWithInfo(info: [String : AnyObject], fromImagePickerController picker: UIImagePickerController)
 }
 
-public class IMCameraViewController: UIViewController {
+@objc public class IMCameraViewController: UIViewController {
 
     // Required init variables
-    private var session: IMImojiSession!
-    private var imageBundle: NSBundle
+    private(set) public var session: IMImojiSession!
 
     // AVFoundation variables
     private var captureSession: AVCaptureSession!
@@ -45,7 +52,7 @@ public class IMCameraViewController: UIViewController {
     private var frontCameraDevice: AVCaptureDevice!
     private var stillCameraOutput: AVCaptureStillImageOutput!
     private var captureMotionManager: CMMotionManager!
-    private var currentOrientation: UIImageOrientation!
+    private(set) public var currentOrientation: UIImageOrientation!
     private var captureSessionQueue: dispatch_queue_t!
     private var previewView: UIView!
     private var previewLayer: AVCaptureVideoPreviewLayer!
@@ -59,17 +66,12 @@ public class IMCameraViewController: UIViewController {
     private var flipButton: UIButton!
     private var photoLibraryButton: UIButton!
 
-    // Controller type to present when picture is taken or used from photo library
-    private var presentingViewControllerType: Int
-
     // Delegate object
     public var delegate: IMCameraViewControllerDelegate?
 
     // MARK: - Object lifecycle
-    public init(session: IMImojiSession, imageBundle: NSBundle, controllerType: Int) {
+    public init(session: IMImojiSession) {
         self.session = session
-        self.imageBundle = imageBundle
-        presentingViewControllerType = controllerType
         super.init(nibName: nil, bundle: nil)
 
         // Create queue for AVCaptureSession
@@ -88,23 +90,26 @@ public class IMCameraViewController: UIViewController {
 
         // Set up toolbar buttons
         captureButton = UIButton(type: UIButtonType.Custom)
-        captureButton.setImage(UIImage(named: "Artmoji-Circle"), forState: UIControlState.Normal)
-        captureButton.addTarget(self, action: "captureButtonTapped", forControlEvents: UIControlEvents.TouchUpInside)
+        captureButton.addTarget(self, action: #selector(captureButtonTapped), forControlEvents: UIControlEvents.TouchUpInside)
 
         let cancelButton = UIButton(type: UIButtonType.Custom)
-        cancelButton.setImage(UIImage(named: "Artmoji-Cancel"), forState: UIControlState.Normal)
-        cancelButton.addTarget(self, action: "cancelButtonTapped", forControlEvents: UIControlEvents.TouchUpInside)
-        cancelButton.imageEdgeInsets = UIEdgeInsetsMake(IMArtmojiConstants.DefaultButtonItemInset, IMArtmojiConstants.DefaultButtonItemInset, IMArtmojiConstants.DefaultButtonItemInset, IMArtmojiConstants.DefaultButtonItemInset)
-        cancelButton.frame = CGRectMake(0, 0, IMArtmojiConstants.DefaultButtonItemWidthHeight, IMArtmojiConstants.DefaultButtonItemWidthHeight)
+        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), forControlEvents: UIControlEvents.TouchUpInside)
+        cancelButton.imageEdgeInsets = UIEdgeInsetsMake(6.25, 6.25, 6.25, 6.25)
+        cancelButton.frame = CGRectMake(0, 0, 50, 50)
         self.cancelButton = UIBarButtonItem(customView: cancelButton)
 
         flipButton = UIButton(type: UIButtonType.Custom)
-        flipButton.setImage(UIImage(named: "Artmoji-Camera-Flip"), forState: UIControlState.Normal)
-        flipButton.addTarget(self, action: "flipButtonTapped", forControlEvents: UIControlEvents.TouchUpInside)
+        flipButton.addTarget(self, action: #selector(flipButtonTapped), forControlEvents: UIControlEvents.TouchUpInside)
 
         photoLibraryButton = UIButton(type: UIButtonType.Custom)
-        photoLibraryButton.setImage(UIImage(named: "Artmoji-Photo-Library"), forState: UIControlState.Normal)
-        photoLibraryButton.addTarget(self, action: "photoLibraryButtonTapped", forControlEvents: UIControlEvents.TouchUpInside)
+        photoLibraryButton.addTarget(self, action: #selector(photoLibraryButtonTapped), forControlEvents: UIControlEvents.TouchUpInside)
+        
+        if let bundlePath = NSBundle.init(forClass: IMCameraViewController.self).pathForResource("ImojiEditorAssets", ofType: "bundle") {
+            captureButton.setImage(UIImage(contentsOfFile: String(format: "%@/camera_button.png", bundlePath)), forState: UIControlState.Normal)
+            cancelButton.setImage(UIImage(contentsOfFile: String(format: "%@/camera_cancel.png", bundlePath)), forState: UIControlState.Normal)
+            flipButton.setImage(UIImage(contentsOfFile: String(format: "%@/camera_flipcam.png", bundlePath)), forState: UIControlState.Normal)
+            photoLibraryButton.setImage(UIImage(contentsOfFile: String(format: "%@/camera_photos.png", bundlePath)), forState: UIControlState.Normal)
+        }
 
         // Set up top nav bar
         navigationBar = UIToolbar()
@@ -135,20 +140,20 @@ public class IMCameraViewController: UIViewController {
             let cameraInput = try AVCaptureDeviceInput(device: self.frontCameraDevice)
             do {
                 try cameraInput.device.lockForConfiguration()
-                
+
                 if cameraInput.device.isExposureModeSupported(AVCaptureExposureMode.ContinuousAutoExposure) {
                     cameraInput.device.exposureMode = AVCaptureExposureMode.ContinuousAutoExposure
                 }
-                
+
                 if cameraInput.device.isFocusModeSupported(AVCaptureFocusMode.ContinuousAutoFocus) {
                     cameraInput.device.focusMode = AVCaptureFocusMode.ContinuousAutoFocus
                 }
-                
+
                 cameraInput.device.unlockForConfiguration()
             } catch let error as NSError {
                 NSLog("error trying to lock camera for configuration in setup(): \(error)")
             }
-            
+
             if self.captureSession.canAddInput(cameraInput) {
                 self.captureSession.addInput(cameraInput)
             }
@@ -174,21 +179,21 @@ public class IMCameraViewController: UIViewController {
             make.top.equalTo()(self.view)
             make.left.equalTo()(self.view)
             make.right.equalTo()(self.view)
-            make.height.equalTo()(IMArtmojiConstants.NavigationBarHeight)
+            make.height.equalTo()(IMCameraViewControllerConstants.NavigationBarHeight)
         }
 
         photoLibraryButton.mas_makeConstraints { make in
-            make.bottom.equalTo()(self.view).offset()(-IMArtmojiConstants.CameraViewBottomButtonBottomOffset)
+            make.bottom.equalTo()(self.view).offset()(-IMCameraViewControllerConstants.CameraViewBottomButtonBottomOffset)
             make.left.equalTo()(self.view).offset()(34)
         }
-        
+
         flipButton.mas_makeConstraints { make in
-            make.bottom.equalTo()(self.view).offset()(-IMArtmojiConstants.CameraViewBottomButtonBottomOffset)
+            make.bottom.equalTo()(self.view).offset()(-IMCameraViewControllerConstants.CameraViewBottomButtonBottomOffset)
             make.right.equalTo()(self.view).offset()(-30)
         }
-        
+
         captureButton.mas_makeConstraints { make in
-            make.bottom.equalTo()(self.view).offset()(-IMArtmojiConstants.CaptureButtonBottomOffset)
+            make.bottom.equalTo()(self.view).offset()(-IMCameraViewControllerConstants.CaptureButtonBottomOffset)
             make.centerX.equalTo()(self.view)
         }
     }
@@ -204,8 +209,8 @@ public class IMCameraViewController: UIViewController {
                 // Set the image orientation based on device orientation
                 // This will work even if the orientation is locked on the device
                 self.currentOrientation = abs(data.acceleration.y) < abs(data.acceleration.x)
-                                          ? data.acceleration.x > 0 ? UIImageOrientation.Right : UIImageOrientation.Left
-                                          : data.acceleration.y > 0 ? UIImageOrientation.Down : UIImageOrientation.Up
+                        ? data.acceleration.x > 0 ? UIImageOrientation.Right : UIImageOrientation.Left
+                        : data.acceleration.y > 0 ? UIImageOrientation.Down : UIImageOrientation.Up
             }
         }
 
@@ -261,25 +266,25 @@ public class IMCameraViewController: UIViewController {
     func checkAuthorizationStatus() -> AVAuthorizationStatus {
         var authorizationStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
         switch authorizationStatus {
-            case .NotDetermined:
-                // permission dialog not yet presented, request authorization
-                AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo) { granted in
-                    if granted {
-                        authorizationStatus = .Authorized
-                    } else {
-                        // user denied, nothing much to do
-                        authorizationStatus = .Denied
-                    }
+        case .NotDetermined:
+            // permission dialog not yet presented, request authorization
+            AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo) { granted in
+                if granted {
+                    authorizationStatus = .Authorized
+                } else {
+                    // user denied, nothing much to do
+                    authorizationStatus = .Denied
                 }
-                break
-            case .Authorized:
-                // go ahead
-                break
-            case .Denied, .Restricted:
-                // the user explicitly denied camera usage or is not allowed to access the camera devices
-                break
+            }
+            break
+        case .Authorized:
+            // go ahead
+            break
+        case .Denied, .Restricted:
+            // the user explicitly denied camera usage or is not allowed to access the camera devices
+            break
         }
-        
+
         return authorizationStatus
     }
 
@@ -287,7 +292,7 @@ public class IMCameraViewController: UIViewController {
         if let _ = navigationBar.items, let index = navigationBar.items!.indexOf(cancelButton) {
             navigationBar.items!.removeAtIndex(index)
         }
-        
+
         if delegate?.userDidCancelCameraViewController != nil {
             navigationBar.items = [cancelButton]
         }
@@ -302,9 +307,9 @@ public class IMCameraViewController: UIViewController {
                     // if the session preset .Photo is used, or if explicitly set in the device's outputSettings
                     // we get the data already compressed as JPEG
                     let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
-                    
+
                     // the sample buffer also contains the metadata, in case we want to modify it
-//                    let metadata = CMCopyDictionaryOfAttachments(nil, sampleBuffer, CMAttachmentMode(kCMAttachmentMode_ShouldPropagate))//.takeUnretainedValue()
+                    let metadata = CMCopyDictionaryOfAttachments(nil, sampleBuffer, CMAttachmentMode(kCMAttachmentMode_ShouldPropagate))
 
                     if var image = UIImage(data: imageData) {
                         if let currentCameraInput = self.captureSession.inputs.first as? AVCaptureDeviceInput {
@@ -312,20 +317,12 @@ public class IMCameraViewController: UIViewController {
                                 image = IMDrawingUtils().flipImage(image)
                             }
                         }
-                        
+
                         dispatch_async(dispatch_get_main_queue()) {
-                            if self.presentingViewControllerType == IMArtmojiConstants.PresentingViewControllerType.CreateArtmoji {
-                                let createArtmojiViewController = IMCreateArtmojiViewController(sourceImage: image, capturedImageOrientation: self.currentOrientation, session: self.session, imageBundle: self.imageBundle)
-                                self.presentViewController(createArtmojiViewController, animated: false, completion: nil)
-                            } else if self.presentingViewControllerType == IMArtmojiConstants.PresentingViewControllerType.CreateImoji {
-                                let createImojiViewController = IMCreateImojiViewController(sourceImage: image, session: self.session)
-                                createImojiViewController.createDelegate = self
-                                self.presentViewController(createImojiViewController, animated: false, completion: nil)
-                            }
+                            self.delegate?.userDidCaptureImage?(image, metadata: metadata!, fromCameraViewController: self)
                         }
                     }
-                }
-                else {
+                } else {
                     NSLog("error while capturing still image: \(error)")
                     self.showCaptureErrorAlertTitle("Problems", message: "Yikes! There was a problem taking the photo.")
                 }
@@ -344,20 +341,20 @@ public class IMCameraViewController: UIViewController {
                     let cameraInput = try AVCaptureDeviceInput(device: currentCameraInput.device.position == AVCaptureDevicePosition.Front ? self.backCameraDevice : self.frontCameraDevice)
                     do {
                         try cameraInput.device.lockForConfiguration()
-                        
+
                         if cameraInput.device.isExposureModeSupported(AVCaptureExposureMode.ContinuousAutoExposure) {
                             cameraInput.device.exposureMode = AVCaptureExposureMode.ContinuousAutoExposure
                         }
-                        
+
                         if cameraInput.device.isFocusModeSupported(AVCaptureFocusMode.ContinuousAutoFocus) {
                             cameraInput.device.focusMode = AVCaptureFocusMode.ContinuousAutoFocus
                         }
-                        
+
                         cameraInput.device.unlockForConfiguration()
                     } catch let error as NSError {
                         NSLog("error while locking camera for configuration in flipButtonTapped(): \(error)")
                     }
-                    
+
                     if self.captureSession.canAddInput(cameraInput) {
                         self.captureSession.addInput(cameraInput)
                     }
@@ -397,36 +394,12 @@ public class IMCameraViewController: UIViewController {
 
 // MARK: - UIImagePickerControllerDelegate
 extension IMCameraViewController: UIImagePickerControllerDelegate {
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
-        if presentingViewControllerType == IMArtmojiConstants.PresentingViewControllerType.CreateArtmoji {
-            let createArtmojiViewController = IMCreateArtmojiViewController(sourceImage: image, capturedImageOrientation: nil, session: self.session, imageBundle: self.imageBundle)
-            createArtmojiViewController.modalPresentationStyle = UIModalPresentationStyle.FullScreen
-            createArtmojiViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-            picker.presentViewController(createArtmojiViewController, animated: true, completion: nil)
-        } else if presentingViewControllerType == IMArtmojiConstants.PresentingViewControllerType.CreateImoji {
-            let createImojiViewController = IMCreateImojiViewController(sourceImage: image, session: self.session)
-            createImojiViewController.createDelegate = self
-            createImojiViewController.modalPresentationStyle = UIModalPresentationStyle.FullScreen
-            createImojiViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-            picker.presentViewController(createImojiViewController, animated: true, completion: nil)
-        }
+    public func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        delegate?.userDidPickMediaWithInfo?(info, fromImagePickerController: picker)
     }
 }
 
 // MARK: - UINavigationControllerDelegate
 extension IMCameraViewController: UINavigationControllerDelegate {
 
-}
-
-// MARK: - IMCreateImojiViewControllerDelegate
-extension IMCameraViewController: IMCreateImojiViewControllerDelegate {
-    public func userDidFinishCreatingImoji(imoji: IMImojiObject?, withError error: NSError?, fromViewController viewController: IMCreateImojiViewController) {
-        if error == nil {
-            delegate?.userDidFinishCreatingImoji?(imoji!, fromCameraViewController: self)
-        }
-    }
-
-    public func userDidCancelImageEdit(viewController: IMCreateImojiViewController) {
-        viewController.dismissViewControllerAnimated(false, completion: nil)
-    }
 }

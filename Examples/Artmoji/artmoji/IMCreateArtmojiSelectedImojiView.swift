@@ -88,7 +88,7 @@ public class IMCreateArtmojiSelectedImojiView: UIView {
         flipped = !flipped
 
         let image = imojiView.image!
-        imojiView.image = IMDrawingUtils().flipImage(image)
+        imojiView.image = IMDrawingUtils.flipImage(image)
         UIGraphicsEndImageContext()
     }
 

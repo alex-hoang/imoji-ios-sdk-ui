@@ -170,18 +170,18 @@ public class IMCreateArtmojiView: UIView {
         // Set up top buttons
         deleteImojiButton = UIButton(type: UIButtonType.Custom)
         deleteImojiButton.setImage(UIImage(named: "Artmoji-Delete-Imoji"), forState: UIControlState.Normal)
-        deleteImojiButton.addTarget(self, action: "buttonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+        deleteImojiButton.addTarget(self, action: #selector(buttonTapped), forControlEvents: UIControlEvents.TouchUpInside)
         deleteImojiButton.tag = IMCreateArtmojiViewButtonType.Delete.rawValue
         deleteImojiButton.hidden = true
 
         drawButton = UIButton(type: UIButtonType.Custom)
         drawButton.setImage(UIImage(named: "Artmoji-Draw"), forState: UIControlState.Normal)
-        drawButton.addTarget(self, action: "buttonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+        drawButton.addTarget(self, action: #selector(buttonTapped), forControlEvents: UIControlEvents.TouchUpInside)
         drawButton.tag = IMCreateArtmojiViewButtonType.Draw.rawValue
 
         flipImojiButton = UIButton(type: UIButtonType.Custom)
         flipImojiButton.setImage(UIImage(named: "Artmoji-Flip-Imoji"), forState: UIControlState.Normal)
-        flipImojiButton.addTarget(self, action: "buttonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+        flipImojiButton.addTarget(self, action: #selector(buttonTapped), forControlEvents: UIControlEvents.TouchUpInside)
         flipImojiButton.tag = IMCreateArtmojiViewButtonType.Flip.rawValue
         flipImojiButton.hidden = true
 
@@ -193,40 +193,40 @@ public class IMCreateArtmojiView: UIView {
         // Set up bottom buttons
         cancelButton = UIButton(type: UIButtonType.Custom)
         cancelButton.setImage(UIImage(named: "Artmoji-Cancel"), forState: UIControlState.Normal)
-        cancelButton.addTarget(self, action: "buttonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+        cancelButton.addTarget(self, action: #selector(buttonTapped), forControlEvents: UIControlEvents.TouchUpInside)
         cancelButton.tag = IMCreateArtmojiViewButtonType.Cancel.rawValue
 
         shareButton = UIButton(type: UIButtonType.Custom)
         shareButton.setImage(UIImage(named: "Artmoji-Share"), forState: UIControlState.Normal)
-        shareButton.addTarget(self, action: "buttonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+        shareButton.addTarget(self, action: #selector(buttonTapped), forControlEvents: UIControlEvents.TouchUpInside)
         shareButton.tag = IMCreateArtmojiViewButtonType.Done.rawValue
 
         // Draw the plus image on top of the circle image and center it horizontally and vertically
         let circleImage = UIImage(named: "Artmoji-Circle")!
         let plusImage = UIImage(named: "Artmoji-Add-Imoji")!
-        let imojiCollectionImage = IMDrawingUtils().drawImage(image: plusImage, withinImage: circleImage,
+        let imojiCollectionImage = IMDrawingUtils.drawImage(image: plusImage, withinImage: circleImage,
             atPoint: CGPointMake((circleImage.size.width - plusImage.size.width) / 2.0, (circleImage.size.height - plusImage.size.height) / 2.0))
         
         imojiCollectionButton = UIButton(type: UIButtonType.Custom)
         imojiCollectionButton.setImage(imojiCollectionImage, forState: UIControlState.Normal)
-        imojiCollectionButton.addTarget(self, action: "buttonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+        imojiCollectionButton.addTarget(self, action: #selector(buttonTapped), forControlEvents: UIControlEvents.TouchUpInside)
         imojiCollectionButton.tag = IMCreateArtmojiViewButtonType.Collection.rawValue
 
         // Set up drawing mode buttons
         backButton = UIButton(type: UIButtonType.Custom)
         backButton.setImage(UIImage(named: "Artmoji-Draw-Back"), forState: UIControlState.Normal)
-        backButton.addTarget(self, action: "buttonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+        backButton.addTarget(self, action: #selector(buttonTapped), forControlEvents: UIControlEvents.TouchUpInside)
         backButton.tag = IMCreateArtmojiViewButtonType.Back.rawValue
         backButton.hidden = true
 
         undoButton = UIButton(type: UIButtonType.Custom)
         undoButton.setImage(UIImage(named: "Artmoji-Draw-Undo"), forState: UIControlState.Normal)
-        undoButton.addTarget(self, action: "buttonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+        undoButton.addTarget(self, action: #selector(buttonTapped), forControlEvents: UIControlEvents.TouchUpInside)
         undoButton.tag = IMCreateArtmojiViewButtonType.Undo.rawValue
         undoButton.hidden = true
 
         brushColorPreview = UIButton(type: UIButtonType.Custom)
-        brushColorPreview.addTarget(self, action: "buttonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+        brushColorPreview.addTarget(self, action: #selector(buttonTapped), forControlEvents: UIControlEvents.TouchUpInside)
         brushColorPreview.tag = IMCreateArtmojiViewButtonType.Draw.rawValue
         brushColorPreview.frame = CGRectMake(0, 0, IMArtmojiConstants.BrushColorPreviewWidthHeight, IMArtmojiConstants.BrushColorPreviewWidthHeight)
         brushColorPreview.hidden = true
@@ -253,12 +253,12 @@ public class IMCreateArtmojiView: UIView {
         brushSizeSlider.maximumValue = Float(IMArtmojiConstants.MaximumBrushSize)
         brushSizeSlider.value = Float(brushWidth)
         brushSizeSlider.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
-        brushSizeSlider.addTarget(self, action: "sliderValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
+        brushSizeSlider.addTarget(self, action: #selector(sliderValueChanged), forControlEvents: UIControlEvents.ValueChanged)
         brushSizeSlider.tag = IMCreateArtmojiViewSliderType.BrushWidth.rawValue
         brushSizeSlider.hidden = true
 
         colorSlider = IMColorSlider()
-        colorSlider.addTarget(self, action: "sliderValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
+        colorSlider.addTarget(self, action: #selector(sliderValueChanged), forControlEvents: UIControlEvents.ValueChanged)
         colorSlider.tag = IMCreateArtmojiViewSliderType.Color.rawValue
         colorSlider.vertical = true
         colorSlider.hidden = true
@@ -370,15 +370,15 @@ public class IMCreateArtmojiView: UIView {
     }
 
     private func setupGestureRecognizers() {
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: "imojiPanned:")
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(imojiPanned))
         panRecognizer.cancelsTouchesInView = false
         panRecognizer.delegate = self
 
-        let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: "imojiRotated:")
+        let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(imojiRotated))
         rotationRecognizer.cancelsTouchesInView = false
         rotationRecognizer.delegate = self
 
-        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: "imojiPinched:")
+        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(imojiPinched))
         pinchRecognizer.cancelsTouchesInView = false
         pinchRecognizer.delegate = self
 
@@ -386,7 +386,7 @@ public class IMCreateArtmojiView: UIView {
         backgroundGestureView.addGestureRecognizer(rotationRecognizer)
         backgroundGestureView.addGestureRecognizer(pinchRecognizer)
         
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "drawingCanvasLongPressed:")
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(drawingCanvasLongPressed))
         longPressRecognizer.minimumPressDuration = 0.2
         longPressRecognizer.cancelsTouchesInView = false
         longPressRecognizer.delegate = self
@@ -477,11 +477,11 @@ public class IMCreateArtmojiView: UIView {
             UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
             let context = UIGraphicsGetCurrentContext()
 
-            CGContextTranslateCTM(context, image.size.width, 0)
-            CGContextScaleCTM(context, -1, 1)
+            CGContextTranslateCTM(context!, image.size.width, 0)
+            CGContextScaleCTM(context!, -1, 1)
             image.drawInRect(CGRectMake(0, 0, image.size.width, image.size.height))
 
-            image = UIGraphicsGetImageFromCurrentImageContext()
+            image = UIGraphicsGetImageFromCurrentImageContext()!
             UIGraphicsEndImageContext()
         }
 
@@ -659,19 +659,19 @@ public class IMCreateArtmojiView: UIView {
 
         self.selectedImojiView = selectedImojiView
 
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: "imojiPanned:")
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(imojiPanned))
         panRecognizer.cancelsTouchesInView = false
         panRecognizer.delegate = self
 
-        let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: "imojiRotated:")
+        let rotationRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(imojiRotated))
         rotationRecognizer.cancelsTouchesInView = false
         rotationRecognizer.delegate = self
 
-        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: "imojiPinched:")
+        let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(imojiPinched))
         pinchRecognizer.cancelsTouchesInView = false
         pinchRecognizer.delegate = self
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "imojiTapped:")
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imojiTapped))
         tapGestureRecognizer.cancelsTouchesInView = false
         tapGestureRecognizer.delegate = self
 
@@ -693,34 +693,34 @@ public class IMCreateArtmojiView: UIView {
         let context = UIGraphicsGetCurrentContext()
 
         // Save background image
-        CGContextSaveGState(context)
-        CGContextTranslateCTM(context, backgroundView.center.x, backgroundView.center.y)
-        CGContextConcatCTM(context, backgroundView.transform)
-        CGContextTranslateCTM(context,
+        CGContextSaveGState(context!)
+        CGContextTranslateCTM(context!, backgroundView.center.x, backgroundView.center.y)
+        CGContextConcatCTM(context!, backgroundView.transform)
+        CGContextTranslateCTM(context!,
                 -backgroundView.bounds.size.width * backgroundView.layer.anchorPoint.x,
                 -backgroundView.bounds.size.height * backgroundView.layer.anchorPoint.y)
         backgroundView.layer.renderInContext(context!)
-        CGContextRestoreGState(context)
+        CGContextRestoreGState(context!)
 
         // Save all imojis added to the backgroundView
         for imoji in selectedImojis {
-            CGContextSaveGState(context)
-            CGContextTranslateCTM(context, imoji.center.x, imoji.center.y)
-            CGContextConcatCTM(context, imoji.transform)
-            CGContextTranslateCTM(context, -imoji.bounds.size.width * imoji.layer.anchorPoint.x, -imoji.bounds.size.height * imoji.layer.anchorPoint.y)
+            CGContextSaveGState(context!)
+            CGContextTranslateCTM(context!, imoji.center.x, imoji.center.y)
+            CGContextConcatCTM(context!, imoji.transform)
+            CGContextTranslateCTM(context!, -imoji.bounds.size.width * imoji.layer.anchorPoint.x, -imoji.bounds.size.height * imoji.layer.anchorPoint.y)
             imoji.layer.renderInContext(context!)
-            CGContextRestoreGState(context)
+            CGContextRestoreGState(context!)
         }
 
         // Save drawing
-        CGContextSaveGState(context)
-        CGContextTranslateCTM(context, drawingCanvasView.center.x, drawingCanvasView.center.y)
-        CGContextConcatCTM(context, drawingCanvasView.transform)
-        CGContextTranslateCTM(context,
+        CGContextSaveGState(context!)
+        CGContextTranslateCTM(context!, drawingCanvasView.center.x, drawingCanvasView.center.y)
+        CGContextConcatCTM(context!, drawingCanvasView.transform)
+        CGContextTranslateCTM(context!,
                 -drawingCanvasView.bounds.size.width * drawingCanvasView.layer.anchorPoint.x,
                 -drawingCanvasView.bounds.size.height * drawingCanvasView.layer.anchorPoint.y)
         drawingCanvasView.layer.renderInContext(context!)
-        CGContextRestoreGState(context)
+        CGContextRestoreGState(context!)
 
         let watermarkImage = UIImage(named:"Artmoji-Share-Watermark")!
         switch capturedImageOrientation {
@@ -742,9 +742,9 @@ public class IMCreateArtmojiView: UIView {
         }
 
         let img = capturedImageOrientation == UIImageOrientation.Up ? UIGraphicsGetImageFromCurrentImageContext()
-                                                                    : UIImage(CGImage: UIGraphicsGetImageFromCurrentImageContext().CGImage!, scale: 1.0, orientation: capturedImageOrientation)
+                                                                    : UIImage(CGImage: UIGraphicsGetImageFromCurrentImageContext()!.CGImage!, scale: 1.0, orientation: capturedImageOrientation)
         UIGraphicsEndImageContext()
-        return img
+        return img!
     }
 
     // Render the preview image for the brush upon entering drawing mode the first time or
@@ -756,7 +756,7 @@ public class IMCreateArtmojiView: UIView {
 
         // Draw the pencil on top of the preview and center it horizontally
         let pencilImage = UIImage(named: "Artmoji-Draw")!
-        brushColorPreview.setImage(IMDrawingUtils().drawImage(image: pencilImage, withinImage: brushColorPreview.imageForState(UIControlState.Normal)!,
+        brushColorPreview.setImage(IMDrawingUtils.drawImage(image: pencilImage, withinImage: brushColorPreview.imageForState(UIControlState.Normal)!,
             atPoint: CGPointMake(brushColorPreview.imageForState(UIControlState.Normal)!.size.width / 2.0, 0)),
             forState: UIControlState.Normal)
 
@@ -773,13 +773,13 @@ public class IMCreateArtmojiView: UIView {
         let context = UIGraphicsGetCurrentContext()
         drawingCanvasView.image?.drawInRect(CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
 
-        CGContextMoveToPoint(context, fromPoint.x, fromPoint.y)
-        CGContextAddLineToPoint(context, toPoint.x, toPoint.y)
-        CGContextSetLineCap(context, CGLineCap.Round)
-        CGContextSetLineWidth(context, brushWidth)
-        CGContextSetStrokeColorWithColor(context, UIColor(hue: self.hue, saturation: 1.0, brightness: 1.0, alpha: 1.0).CGColor)
-        CGContextSetBlendMode(context, CGBlendMode.Normal)
-        CGContextStrokePath(context)
+        CGContextMoveToPoint(context!, fromPoint.x, fromPoint.y)
+        CGContextAddLineToPoint(context!, toPoint.x, toPoint.y)
+        CGContextSetLineCap(context!, CGLineCap.Round)
+        CGContextSetLineWidth(context!, brushWidth)
+        CGContextSetStrokeColorWithColor(context!, UIColor(hue: self.hue, saturation: 1.0, brightness: 1.0, alpha: 1.0).CGColor)
+        CGContextSetBlendMode(context!, CGBlendMode.Normal)
+        CGContextStrokePath(context!)
 
         drawingCanvasView.image = UIGraphicsGetImageFromCurrentImageContext()
         drawingCanvasView.alpha = 1.0
@@ -794,33 +794,33 @@ public class IMCreateArtmojiView: UIView {
         let context = UIGraphicsGetCurrentContext()
 
         // Draw the black border
-        CGContextMoveToPoint(context, frame.size.width / 2.0, frame.size.height / 2.0)
-        CGContextAddLineToPoint(context, frame.size.width / 2.0, frame.size.height / 2.0)
-        CGContextSetLineCap(context, CGLineCap.Round)
-        CGContextSetLineWidth(context, lineWidth + roundedBlackBorderSize)
-        CGContextSetStrokeColorWithColor(context, UIColor(red: 0, green: 0, blue: 0, alpha: 0.8).CGColor)
-        CGContextStrokePath(context)
+        CGContextMoveToPoint(context!, frame.size.width / 2.0, frame.size.height / 2.0)
+        CGContextAddLineToPoint(context!, frame.size.width / 2.0, frame.size.height / 2.0)
+        CGContextSetLineCap(context!, CGLineCap.Round)
+        CGContextSetLineWidth(context!, lineWidth + roundedBlackBorderSize)
+        CGContextSetStrokeColorWithColor(context!, UIColor(red: 0, green: 0, blue: 0, alpha: 0.8).CGColor)
+        CGContextStrokePath(context!)
 
         // Draw the white border
-        CGContextMoveToPoint(context, frame.size.width / 2.0, frame.size.height / 2.0)
-        CGContextAddLineToPoint(context, frame.size.width / 2.0, frame.size.height / 2.0)
-        CGContextSetLineWidth(context, lineWidth + roundedWhiteBorderSize)
-        CGContextSetStrokeColorWithColor(context, UIColor.whiteColor().CGColor)
-        CGContextStrokePath(context)
+        CGContextMoveToPoint(context!, frame.size.width / 2.0, frame.size.height / 2.0)
+        CGContextAddLineToPoint(context!, frame.size.width / 2.0, frame.size.height / 2.0)
+        CGContextSetLineWidth(context!, lineWidth + roundedWhiteBorderSize)
+        CGContextSetStrokeColorWithColor(context!, UIColor.whiteColor().CGColor)
+        CGContextStrokePath(context!)
 
         // Draw the preview within the borders
-        CGContextMoveToPoint(context, frame.size.width / 2.0, frame.size.height / 2.0)
-        CGContextAddLineToPoint(context, frame.size.width / 2.0, frame.size.height / 2.0)
+        CGContextMoveToPoint(context!, frame.size.width / 2.0, frame.size.height / 2.0)
+        CGContextAddLineToPoint(context!, frame.size.width / 2.0, frame.size.height / 2.0)
         // When sizeRatio is not 0, multiply the current brush width by the ratio
         // Otherwise, set it to the provided lineWidth
-        CGContextSetLineWidth(context, sizeRatio == 0 ? lineWidth : brushWidth * sizeRatio)
-        CGContextSetStrokeColorWithColor(context, UIColor(hue: self.hue, saturation: 1.0, brightness: 1.0, alpha: 1.0).CGColor)
-        CGContextStrokePath(context)
+        CGContextSetLineWidth(context!, sizeRatio == 0 ? lineWidth : brushWidth * sizeRatio)
+        CGContextSetStrokeColorWithColor(context!, UIColor(hue: self.hue, saturation: 1.0, brightness: 1.0, alpha: 1.0).CGColor)
+        CGContextStrokePath(context!)
 
         let previewImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 
-        return previewImage
+        return previewImage!
     }
 }
 

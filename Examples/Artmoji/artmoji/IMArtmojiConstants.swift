@@ -24,10 +24,8 @@
 //
 
 struct IMArtmojiConstants {
-    static let NavigationBarHeight: CGFloat = 82.0
     static let DefaultButtonTopOffset: CGFloat = 30.0
     static let CaptureButtonBottomOffset: CGFloat = 20.0
-    static let CameraViewBottomButtonBottomOffset: CGFloat = 28.0
 
     static let CreateArtmojiViewTopButtonTopOffset: CGFloat = 42.0
     static let CreateArtmojiViewTopButtonEdgeOffset: CGFloat = 26.0
@@ -45,9 +43,4 @@ struct IMArtmojiConstants {
     static let BrushSizeThumbWidthHeight: CGFloat = 30.0
     static let FormatIdentifier = "com.sopressata.artmoji.artmoji-photos"
     static let FormatVersion = "1.0"
-
-    struct PresentingViewControllerType {
-        static let CreateArtmoji = 0
-        static let CreateImoji = 1
-    }
 }

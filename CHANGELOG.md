@@ -4,6 +4,14 @@
 
 * Adds support for loading iOS 10 sticker objects in IMCollectionView! Just set loadUsingStickerViews to YES for you IMCollectionView instance. Both still and animated content is supported.
 
+### Version 2.1.3
+
+* Generalize IMCameraViewController for use in the ImojiSDKUI.
+* Convert Artmoji to swift 2.3.
+* Update Artmoji to use non-deprecated methods and properties.
+* Move IMDrawingUtils to ImojiSDKUI common.
+* Remove presentingViewControllerType from artmoji as IMCameraViewController's delegate methods are enough.
+
 ### Version 2.1.2
 
 * Fixes a crash with the no recents splash

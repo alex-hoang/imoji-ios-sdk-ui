@@ -40,7 +40,7 @@ class PhotoEditingViewController: IMCreateArtmojiViewController {
 
 // MARK: - PHContentEditingController
 extension PhotoEditingViewController: PHContentEditingController {
-    func canHandleAdjustmentData(adjustmentData: PHAdjustmentData?) -> Bool {
+    func canHandleAdjustmentData(adjustmentData: PHAdjustmentData) -> Bool {
         // Inspect the adjustmentData to determine whether your extension can work with past edits.
         // (Typically, you use its formatIdentifier and formatVersion properties to do this.)
 //        if let adjustmentData = adjustmentData {
@@ -49,7 +49,7 @@ extension PhotoEditingViewController: PHContentEditingController {
         return false
     }
 
-    func startContentEditingWithInput(contentEditingInput: PHContentEditingInput?, placeholderImage: UIImage) {
+    func startContentEditingWithInput(contentEditingInput: PHContentEditingInput, placeholderImage: UIImage) {
         // Present content for editing, and keep the contentEditingInput for use when closing the edit session.
         // If you returned true from canHandleAdjustmentData:, contentEditingInput has the original image and adjustment data.
         // If you returned false, the contentEditingInput has past edits "baked in".
@@ -58,7 +58,7 @@ extension PhotoEditingViewController: PHContentEditingController {
         loadView()
     }
 
-    func finishContentEditingWithCompletionHandler(completionHandler: ((PHContentEditingOutput!) -> Void)!) {
+    func finishContentEditingWithCompletionHandler(completionHandler: (PHContentEditingOutput) -> Void) {
         // Update UI to reflect that editing has finished and output is being rendered.
 
         // Render and provide output on a background queue.
@@ -74,7 +74,7 @@ extension PhotoEditingViewController: PHContentEditingController {
             renderedJPEGData!.writeToURL(output.renderedContentURL, atomically: true)
 
             // Call completion handler to commit edit to Photos.
-            completionHandler?(output)
+            completionHandler(output)
 
             // Clean up temporary files, etc.
         }

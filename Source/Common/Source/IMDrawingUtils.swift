@@ -2,7 +2,7 @@
 //  ImojiSDKUI
 //
 //  Created by Alex Hoang
-//  Copyright (C) 2015 Imoji
+//  Copyright (C) 2016 Imoji
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to
@@ -25,29 +25,33 @@
 
 import UIKit
 
-public class IMDrawingUtils {
-    public func flipImage(image: UIImage) -> UIImage {
+@objc public class IMDrawingUtils: NSObject {
+    override private init() {
+        
+    }
+    
+    public class func flipImage(image: UIImage) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
         let context = UIGraphicsGetCurrentContext()
 
-        CGContextTranslateCTM(context, image.size.width, 0)
-        CGContextScaleCTM(context, -1, 1)
+        CGContextTranslateCTM(context!, image.size.width, 0)
+        CGContextScaleCTM(context!, -1, 1)
         image.drawInRect(CGRectMake(0, 0, image.size.width, image.size.height))
 
         let flippedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 
-        return flippedImage
+        return flippedImage!
     }
 
     // Render an image within an image at a specific point.
-    public func drawImage(image foreground: UIImage, withinImage background: UIImage, atPoint: CGPoint) -> UIImage {
+    public class func drawImage(image foreground: UIImage, withinImage background: UIImage, atPoint: CGPoint) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(background.size, false, background.scale)
         background.drawInRect(CGRectMake(0, 0, background.size.width, background.size.height))
         foreground.drawInRect(CGRectMake(atPoint.x, atPoint.y, foreground.size.width, foreground.size.height))
         let combinedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 
-        return combinedImage
+        return combinedImage!
     }
 }
