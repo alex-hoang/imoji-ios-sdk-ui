@@ -27,16 +27,14 @@
 #import <CoreMotion/CoreMotion.h>
 #import <ImojiSDKUI/IMCreateImojiUITheme.h>
 #import <ImojiSDKUI/IMCameraViewController.h>
+#import <ImojiSDKUI/IMDrawingUtils.h>
 #import <ImojiSDK/IMImojiSession.h>
 #import <Masonry/View+MASAdditions.h>
-#import <ImojiSDKUI/ImojiSDKUI-Swift.h>
 
 CGFloat const NavigationBarHeight = 82.0f;
 CGFloat const DefaultButtonTopOffset = 30.0f;
 CGFloat const CaptureButtonBottomOffset = 20.0f;
 CGFloat const CameraViewBottomButtonBottomOffset = 28.0f;
-
-@class IMDrawingUtils;
 
 @interface IMCameraViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
