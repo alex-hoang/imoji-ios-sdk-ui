@@ -31,6 +31,7 @@
 #if __has_include(<ImojiGraphics/ImojiGraphics.h>) && __has_include(<ImojiSDKUI/IMCreateImojiViewController.h>) && !defined(IMOJI_APP_EXTENSION)
 #define IMOJI_EDITOR_ENABLED 1
 #import <ImojiSDKUI/IMCreateImojiViewController.h>
+#import <ImojiSDKUI/IMCameraViewController.h>
 
 @interface IMStickerSearchContainerView () <IMSearchViewDelegate, IMCollectionViewDelegate, IMCreateImojiViewControllerDelegate,
         UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate>
@@ -147,6 +148,20 @@
 #if IMOJI_EDITOR_ENABLED
     if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_8_0) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:@"Take Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            IMCameraViewController *cameraViewController = [IMCameraViewController imojiCameraViewControllerWithSession:self.session];
+            cameraViewController.delegate = self;
+            cameraViewController.modalPresentationStyle = UIModalPresentationCurrentContext;
+            
+            UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+            if([rootViewController isKindOfClass:[UINavigationController class]]) {
+                rootViewController = ((UINavigationController *) rootViewController).visibleViewController;
+            } else if(rootViewController.presentedViewController) {
+                rootViewController = rootViewController.presentedViewController;
+            }
+            [rootViewController presentViewController:cameraViewController animated:YES completion:nil];
+        }]];
 
         [alertController addAction:[UIAlertAction actionWithTitle:@"Photo Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
@@ -184,7 +199,7 @@
                                                                  delegate:self
                                                         cancelButtonTitle:@"Cancel"
                                                    destructiveButtonTitle:nil
-                                                        otherButtonTitles:@"Photo Library", nil];
+                                                        otherButtonTitles:@"Photo Library", @"Take Photo", nil];
 
         [actionSheet showInView:self];
     }
@@ -239,14 +254,38 @@
 
 #if IMOJI_EDITOR_ENABLED
 
-#pragma mark UIImagePickerControllerDelegate
+#pragma mark IMCameraViewControllerDelegate
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo {
-    IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session:self.session];
+- (void)userDidCancelCameraViewController:(IMCameraViewController *)viewController {
+    [viewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)userDidCaptureImage:(UIImage *)image metadata:(NSDictionary *)metadata fromCameraViewController:(IMCameraViewController *)viewController {
+    IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session: self.session];
+    createImojiViewController.createDelegate = self;
+    createImojiViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+    createImojiViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [viewController presentViewController:createImojiViewController animated: true completion: nil];
+}
+
+- (void)userDidPickMediaWithInfo:(NSDictionary<NSString *, id> *__nonnull)info fromImagePickerController:(UIImagePickerController *)picker {
+    UIImage *image = info[@"UIImagePickerControllerOriginalImage"];
+    IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session: self.session];
     createImojiViewController.createDelegate = self;
     createImojiViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     createImojiViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [picker presentViewController:createImojiViewController animated: true completion: nil];
+}
+
+#pragma mark UIImagePickerControllerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    UIImage *image = info[@"UIImagePickerControllerOriginalImage"];
+    IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session:self.session];
+    createImojiViewController.createDelegate = self;
+    createImojiViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+    createImojiViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [picker presentViewController:createImojiViewController animated:YES completion:nil];
 }
 
 #pragma mark IMCreateImojiViewControllerDelegate
@@ -260,15 +299,18 @@
                      withError:(NSError *)error
             fromViewController:(IMCreateImojiViewController *)viewController {
 //    [self dismissViewControllerAnimated:YES completion:nil];
-    UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
-    if([rootViewController isKindOfClass:[UINavigationController class]])
-    {
-        rootViewController = ((UINavigationController *) rootViewController).visibleViewController;
-    } else if(rootViewController.presentedViewController) {
-        rootViewController = rootViewController.presentedViewController;
-    }
+    [viewController dismissViewControllerAnimated:YES completion:^{
+        UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+        if([rootViewController isKindOfClass:[UINavigationController class]])
+        {
+            rootViewController = ((UINavigationController *) rootViewController).visibleViewController;
+        } else if(rootViewController.presentedViewController) {
+            rootViewController = rootViewController.presentedViewController;
+        }
+        
+        [rootViewController dismissViewControllerAnimated:YES completion:nil];
+    }];
 
-    [rootViewController dismissViewControllerAnimated:YES completion:nil];
 
     [self.searchView.recentsButton sendActionsForControlEvents:UIControlEventTouchUpInside];
 }
