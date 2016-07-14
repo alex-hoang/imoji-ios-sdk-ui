@@ -36,7 +36,6 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
 
 #if __has_include(<ImojiGraphics/ImojiGraphics.h>) && __has_include(<ImojiSDKUI/IMCreateImojiViewController.h>) && !defined(IMOJI_APP_EXTENSION)
 #define IMOJI_EDITOR_ENABLED 1
-#import <ImojiSDKUI/ImojiSDKUI-Swift.h>
 #import <ImojiSDKUI/IMCreateImojiViewController.h>
 #import <ImojiSDKUI/IMCameraViewController.h>
 

@@ -2,7 +2,7 @@
 //  ImojiSDKUI
 //
 //  Created by Alex Hoang
-//  Copyright (C) 2015 Imoji
+//  Copyright (C) 2016 Imoji
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to
@@ -23,18 +23,12 @@
 //  IN THE SOFTWARE.
 //
 
-#ifndef artmoji_Artmoji_Bridging_Header_h
-#define artmoji_Artmoji_Bridging_Header_h
+#import <Foundation/Foundation.h>
 
-#import "ImojiSDK/ImojiSDK.h"
-#import "ImojiSDKUI/IMCameraViewController.h"
-#import "ImojiSDKUI/IMCollectionViewController.h"
-#import "ImojiSDKUI/IMCreateImojiViewController.h"
-#import "ImojiSDKUI/IMCreateImojiView.h"
-#import "ImojiSDKUI/IMCreateImojiUITheme.h"
-#import "ImojiSDKUI/IMDrawingUtils.h"
-#import "ImojiSDKUI/IMToolbar.h"
-#import "ImojiSDKUI/IMResourceBundleUtil.h"
-#import <Masonry/Masonry.h>
+@interface IMDrawingUtils : NSObject
 
-#endif
++ (nonnull UIImage *)flipImage:(nonnull UIImage *)image;
+
++ (nonnull UIImage *)drawImage:(nonnull UIImage *)foreground withinImage:(nonnull UIImage *)background atPoint:(CGPoint)atPoint;
+
+@end
