@@ -279,7 +279,13 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
         IMCollectionViewCell *cell = [self dequeueReusableCellWithReuseIdentifier:IMCollectionViewCellReuseId forIndexPath:indexPath];
         [cell setupPlaceholderImageWithPosition:(NSUInteger) indexPath.row];
 
-        id imojiImage = self.images[(NSUInteger) indexPath.section][(NSUInteger) indexPath.row];
+        id imojiImage = nil;
+        if (indexPath.section < self.images.count &&
+            [self.images[(NSUInteger) indexPath.section] isKindOfClass:[NSArray class]] &&
+            indexPath.row < ((NSArray*)self.images[(NSUInteger) indexPath.section]).count) {
+            imojiImage = self.images[(NSUInteger) indexPath.section][(NSUInteger) indexPath.row];
+        }
+        
         if ([imojiImage isKindOfClass:[UIImage class]]) {
             [cell loadImojiImage:((UIImage *) imojiImage) animated:YES];
         } else if (self.loadUsingStickerViews) {
