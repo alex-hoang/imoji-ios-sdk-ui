@@ -27,16 +27,15 @@
 #import <CoreMotion/CoreMotion.h>
 #import <ImojiSDKUI/IMCreateImojiUITheme.h>
 #import <ImojiSDKUI/IMCameraViewController.h>
+#import <ImojiSDKUI/IMCameraView.h>
 #import <ImojiSDKUI/IMDrawingUtils.h>
 #import <ImojiSDK/IMImojiSession.h>
 #import <Masonry/View+MASAdditions.h>
 
-CGFloat const NavigationBarHeight = 82.0f;
-CGFloat const DefaultButtonTopOffset = 30.0f;
-CGFloat const CaptureButtonBottomOffset = 20.0f;
-CGFloat const CameraViewBottomButtonBottomOffset = 28.0f;
 
-@interface IMCameraViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface IMCameraViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, IMCameraViewDelegate>
+
+@property(nonatomic, strong) IMCameraView *cameraView;
 
 // AVFoundation variables
 @property(nonatomic, strong) AVCaptureSession *captureSession;
@@ -72,35 +71,8 @@ CGFloat const CameraViewBottomButtonBottomOffset = 28.0f;
 - (void)loadView {
     [super loadView];
 
-    NSString *bundlePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ImojiEditorAssets" ofType:@"bundle"];
-    self.view.backgroundColor = [UIColor colorWithRed:48.0f / 255.0f green:48.0f / 255.0f blue:48.0f / 255.0f alpha:1.0f];
-
-    // Set up toolbar buttons
-    _captureButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.captureButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/camera_button.png", bundlePath]] forState:UIControlStateNormal];
-    [self.captureButton addTarget:self action:@selector(captureButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-
-    UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [cancelButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/camera_cancel.png", bundlePath]] forState:UIControlStateNormal];
-    [cancelButton addTarget:self action:@selector(cancelButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-    cancelButton.imageEdgeInsets = UIEdgeInsetsMake(6.25f, 6.25f, 6.25f, 6.25f);
-    cancelButton.frame = CGRectMake(0, 0, 50.0f, 50.0f);
-    _cancelButton = [[UIBarButtonItem alloc] initWithCustomView:cancelButton];
-
-    _flipButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.flipButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/camera_flipcam.png", bundlePath]] forState:UIControlStateNormal];
-    [self.flipButton addTarget:self action:@selector(flipButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-
-    _photoLibraryButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.photoLibraryButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/camera_photos.png", bundlePath]] forState:UIControlStateNormal];
-    [self.photoLibraryButton addTarget:self action:@selector(photoLibraryButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-
-    // Set up top nav bar
-    _navigationBar = [[UIToolbar alloc] init];
-    self.navigationBar.clipsToBounds = YES;
-    [self.navigationBar setBackgroundImage:[[UIImage alloc] init] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
-    self.navigationBar.tintColor = [UIColor whiteColor];
-    self.navigationBar.barTintColor = [UIColor clearColor];
+    self.cameraView = [[IMCameraView alloc] init];
+    self.cameraView.delegate = self;
 
     [self determineCancelCameraButtonVisibility];
 
@@ -154,33 +126,10 @@ CGFloat const CameraViewBottomButtonBottomOffset = 28.0f;
         [self.captureSession addOutput:self.stillCameraOutput];
     }
 
-    // Add subviews
-    [self.view addSubview:self.navigationBar];
-    [self.view addSubview:self.photoLibraryButton];
-    [self.view addSubview:self.flipButton];
-    [self.view addSubview:self.captureButton];
+    [self.view addSubview:self.cameraView];
 
-    // Constraints
-    [self.navigationBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view);
-        make.left.equalTo(self.view);
-        make.right.equalTo(self.view);
-        make.height.equalTo(@(NavigationBarHeight));
-    }];
-
-    [self.photoLibraryButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.view).offset(-CameraViewBottomButtonBottomOffset);
-        make.left.equalTo(self.view).offset(34.0f);
-    }];
-
-    [self.flipButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.view).offset(-CameraViewBottomButtonBottomOffset);
-        make.right.equalTo(self.view).offset(-30.0f);
-    }];
-
-    [self.captureButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.view).offset(-CaptureButtonBottomOffset);
-        make.centerX.equalTo(self.view);
+    [self.cameraView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
     }];
 }
 
@@ -211,17 +160,12 @@ CGFloat const CameraViewBottomButtonBottomOffset = 28.0f;
     [self.previewView.layer addSublayer:self.previewLayer];
 
     // Add preview
-    [self.view insertSubview:self.previewView belowSubview:self.navigationBar];
+    [self.cameraView insertSubview:self.previewView belowSubview:self.cameraView.navigationBar];
 
     // Start AVCaptureSession
-#if TARGET_IPHONE_SIMULATOR
-#else
-    if(self.checkAuthorizationStatus == AVAuthorizationStatusAuthorized) {
-        dispatch_async(self.captureSessionQueue, ^{
-            [self.captureSession startRunning];
-        });
+    if([self checkAuthorizationStatus] == AVAuthorizationStatusAuthorized) {
+        [self startRunningCaptureSession];
     }
-#endif
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -235,14 +179,9 @@ CGFloat const CameraViewBottomButtonBottomOffset = 28.0f;
     [self.previewView removeFromSuperview];
 
     // Stop running AVCaptureSession
-#if TARGET_IPHONE_SIMULATOR
-#else
-    if(self.checkAuthorizationStatus == AVAuthorizationStatusAuthorized) {
-        dispatch_async(self.captureSessionQueue, ^{
-            [self.captureSession stopRunning];
-        });
+    if([self checkAuthorizationStatus] == AVAuthorizationStatusAuthorized) {
+        [self stopRunningCaptureSession];
     }
-#endif
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -253,17 +192,21 @@ CGFloat const CameraViewBottomButtonBottomOffset = 28.0f;
     __block AVAuthorizationStatus authorizationStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
 
     switch (authorizationStatus) {
-        case AVAuthorizationStatusNotDetermined:
+        case AVAuthorizationStatusNotDetermined: {
             // permission dialog not yet presented, request authorization
             [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
                 if (granted) {
                     authorizationStatus = AVAuthorizationStatusAuthorized;
+
+                    [self startRunningCaptureSession];
                 } else {
                     // user denied, nothing much to do
                     authorizationStatus = AVAuthorizationStatusDenied;
                 }
             }];
+            
             break;
+        }
         case AVAuthorizationStatusAuthorized:
             // go ahead
             break;
@@ -277,22 +220,40 @@ CGFloat const CameraViewBottomButtonBottomOffset = 28.0f;
 }
 
 - (void)determineCancelCameraButtonVisibility {
-    if(self.navigationBar.items) {
-        NSUInteger index = [self.navigationBar.items indexOfObject:self.cancelButton];
-        NSMutableArray *barItems = [[NSMutableArray alloc] initWithArray:self.navigationBar.items];
+    if(self.cameraView.navigationBar.items) {
+        NSUInteger index = [self.cameraView.navigationBar.items indexOfObject:self.cameraView.cancelButton];
+        NSMutableArray *barItems = [[NSMutableArray alloc] initWithArray:self.cameraView.navigationBar.items];
 
         [barItems removeObjectAtIndex:index];
 
-        self.navigationBar.items = barItems;
+        self.cameraView.navigationBar.items = barItems;
     }
 
     if(self.delegate && [self.delegate respondsToSelector:@selector(userDidCancelCameraViewController:)]) {
-        self.navigationBar.items = @[self.cancelButton];
+        self.cameraView.navigationBar.items = @[self.cameraView.cancelButton];
     }
 }
 
+- (void)startRunningCaptureSession {
+#if TARGET_IPHONE_SIMULATOR
+#else
+    dispatch_async(self.captureSessionQueue, ^{
+        [self.captureSession startRunning];
+    });
+#endif
+}
+
+- (void)stopRunningCaptureSession {
+#if TARGET_IPHONE_SIMULATOR
+#else
+    dispatch_async(self.captureSessionQueue, ^{
+        [self.captureSession stopRunning];
+    });
+#endif
+}
+
 #pragma mark Camera button logic
-- (void)captureButtonTapped {
+- (void)userDidTapCaptureButtonFromCameraView:(IMCameraView *)cameraView {
     dispatch_async(self.captureSessionQueue, ^{
         AVCaptureConnection *connection = [self.stillCameraOutput connectionWithMediaType:AVMediaTypeVideo];
         [self.stillCameraOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef sampleBuffer, NSError *error) {
@@ -323,7 +284,7 @@ CGFloat const CameraViewBottomButtonBottomOffset = 28.0f;
     });
 }
 
-- (void)flipButtonTapped {
+- (void)userDidTapFlipButtonFromCameraView:(IMCameraView *)cameraView {
     dispatch_async(self.captureSessionQueue, ^{
         [self.captureSession beginConfiguration];
 
@@ -364,7 +325,7 @@ CGFloat const CameraViewBottomButtonBottomOffset = 28.0f;
     });
 }
 
-- (void)photoLibraryButtonTapped {
+- (void)userDidTapPhotoLibraryButtonFromCameraView:(IMCameraView *)cameraView {
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
         picker.delegate = self;
@@ -378,7 +339,7 @@ CGFloat const CameraViewBottomButtonBottomOffset = 28.0f;
     }
 }
 
-- (void)cancelButtonTapped {
+- (void)userDidTapCancelButtonFromCameraView:(IMCameraView *)cameraView {
     [self.delegate userDidCancelCameraViewController:self];
 }
 

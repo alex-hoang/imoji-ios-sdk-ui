@@ -25,10 +25,10 @@
 
 #import <ImojiSDK/IMImojiSession.h>
 
-extern CGFloat const NavigationBarHeight;
-extern CGFloat const DefaultButtonTopOffset;
-extern CGFloat const CaptureButtonBottomOffset;
-extern CGFloat const CameraViewBottomButtonBottomOffset;
+//extern CGFloat const NavigationBarHeight;
+//extern CGFloat const DefaultButtonTopOffset;
+//extern CGFloat const CaptureButtonBottomOffset;
+//extern CGFloat const CameraViewBottomButtonBottomOffset;
 
 @protocol IMCameraViewControllerDelegate;
 
@@ -38,13 +38,13 @@ extern CGFloat const CameraViewBottomButtonBottomOffset;
 @property(nonatomic, readonly) UIImageOrientation currentOrientation;
 
 // Top toolbar
-@property(nonatomic, strong, readonly, nullable) UIToolbar *navigationBar;
-@property(nonatomic, strong, readonly, nullable) UIBarButtonItem *cancelButton;
-
-// Bottom buttons
-@property(nonatomic, strong, readonly, nullable) UIButton *captureButton;
-@property(nonatomic, strong, readonly, nullable) UIButton *flipButton;
-@property(nonatomic, strong, readonly, nullable) UIButton *photoLibraryButton;
+//@property(nonatomic, strong, readonly, nullable) UIToolbar *navigationBar;
+//@property(nonatomic, strong, readonly, nullable) UIBarButtonItem *cancelButton;
+//
+//// Bottom buttons
+//@property(nonatomic, strong, readonly, nullable) UIButton *captureButton;
+//@property(nonatomic, strong, readonly, nullable) UIButton *flipButton;
+//@property(nonatomic, strong, readonly, nullable) UIButton *photoLibraryButton;
 
 @property(nonatomic, weak, nullable) id <IMCameraViewControllerDelegate> delegate;
 
