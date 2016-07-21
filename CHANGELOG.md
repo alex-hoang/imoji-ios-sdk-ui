@@ -7,6 +7,7 @@
 * Update Artmoji to use non-deprecated methods and properties.
 * Move IMDrawingUtils to ImojiSDKUI common.
 * Remove presentingViewControllerType from artmoji as IMCameraViewController's delegate methods are enough.
+* Fixes #73
 
 ### Version 2.2.0
 
