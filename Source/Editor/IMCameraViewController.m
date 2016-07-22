@@ -25,17 +25,11 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMotion/CoreMotion.h>
-#import <ImojiSDKUI/IMCreateImojiUITheme.h>
 #import <ImojiSDKUI/IMCameraViewController.h>
-#import <ImojiSDKUI/IMCameraView.h>
 #import <ImojiSDKUI/IMDrawingUtils.h>
-#import <ImojiSDK/IMImojiSession.h>
 #import <Masonry/View+MASAdditions.h>
 
-
 @interface IMCameraViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, IMCameraViewDelegate>
-
-@property(nonatomic, strong) IMCameraView *cameraView;
 
 // AVFoundation variables
 @property(nonatomic, strong) AVCaptureSession *captureSession;
@@ -63,6 +57,11 @@
 
         // Create queue for AVCaptureSession
         self.captureSessionQueue = dispatch_queue_create("com.sopressata.imoji_camera.capture_session", DISPATCH_QUEUE_SERIAL);
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(checkAuthorizationStatus)
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
     }
 
     return self;
@@ -71,11 +70,6 @@
 - (void)loadView {
     [super loadView];
 
-    self.cameraView = [[IMCameraView alloc] init];
-    self.cameraView.delegate = self;
-
-    [self determineCancelCameraButtonVisibility];
-
     // Setup AVCaptureSession
     self.captureSession = [[AVCaptureSession alloc] init];
     self.captureSession.sessionPreset = AVCaptureSessionPresetPhoto;
@@ -83,9 +77,9 @@
     // Get available devices and save reference to front and back cameras
     NSArray *availableCameraDevices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
     for (AVCaptureDevice *device in availableCameraDevices) {
-        if(device.position == AVCaptureDevicePositionBack) {
+        if (device.position == AVCaptureDevicePositionBack) {
             self.backCameraDevice = device;
-        } else if(device.position == AVCaptureDevicePositionFront) {
+        } else if (device.position == AVCaptureDevicePositionFront) {
             self.frontCameraDevice = device;
         }
     }
@@ -113,7 +107,7 @@
             [cameraInput.device unlockForConfiguration];
         }
 
-        if([self.captureSession canAddInput:cameraInput]) {
+        if ([self.captureSession canAddInput:cameraInput]) {
             [self.captureSession addInput:cameraInput];
         }
 
@@ -122,9 +116,22 @@
 
     // Add the still image capture to AVCaptureSession
     self.stillCameraOutput = [[AVCaptureStillImageOutput alloc] init];
-    if([self.captureSession canAddOutput:self.stillCameraOutput]) {
+    if ([self.captureSession canAddOutput:self.stillCameraOutput]) {
         [self.captureSession addOutput:self.stillCameraOutput];
     }
+
+    [self setupCameraView];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+- (void)setupCameraView {
+    _cameraView = [[IMCameraView alloc] initWithFrame:CGRectZero];
+    self.cameraView.delegate = self;
+
+    [self determineCancelCameraButtonVisibility];
 
     [self.view addSubview:self.cameraView];
 
@@ -163,7 +170,7 @@
     [self.cameraView insertSubview:self.previewView belowSubview:self.cameraView.navigationBar];
 
     // Start AVCaptureSession
-    if([self checkAuthorizationStatus] == AVAuthorizationStatusAuthorized) {
+    if ([self checkAuthorizationStatus] == AVAuthorizationStatusAuthorized) {
         [self startRunningCaptureSession];
     }
 }
@@ -179,7 +186,7 @@
     [self.previewView removeFromSuperview];
 
     // Stop running AVCaptureSession
-    if([self checkAuthorizationStatus] == AVAuthorizationStatusAuthorized) {
+    if ([self checkAuthorizationStatus] == AVAuthorizationStatusAuthorized) {
         [self stopRunningCaptureSession];
     }
 }
@@ -188,7 +195,7 @@
     return true;
 }
 
-- (AVAuthorizationStatus)checkAuthorizationStatus{
+- (AVAuthorizationStatus)checkAuthorizationStatus {
     __block AVAuthorizationStatus authorizationStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
 
     switch (authorizationStatus) {
@@ -204,23 +211,40 @@
                     authorizationStatus = AVAuthorizationStatusDenied;
                 }
             }];
-            
+
             break;
         }
         case AVAuthorizationStatusAuthorized:
-            // go ahead
             break;
-        case AVAuthorizationStatusDenied:
-        case AVAuthorizationStatusRestricted:
-            // the user explicitly denied camera usage or is not allowed to access the camera devices
+        case AVAuthorizationStatusDenied: {
+            // the user explicitly denied camera usage
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Camera" message:@"Taking photos requires access to your camera." preferredStyle:UIAlertControllerStyleAlert];
+
+            [alert addAction:[UIAlertAction actionWithTitle:@"Go to settings" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+            }]];
+
+            [self presentViewController:alert animated:YES completion:nil];
+
             break;
+        }
+        case AVAuthorizationStatusRestricted: {
+            // user is not allowed to access the camera devices
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Camera" message:@"Your camera is restricted. Please contact the device owner so they can give you access." preferredStyle:UIAlertControllerStyleAlert];
+
+            [alert addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil]];
+
+            [self presentViewController:alert animated:YES completion:nil];
+
+            break;
+        }
     }
 
     return authorizationStatus;
 }
 
 - (void)determineCancelCameraButtonVisibility {
-    if(self.cameraView.navigationBar.items) {
+    if (self.cameraView.navigationBar.items) {
         NSUInteger index = [self.cameraView.navigationBar.items indexOfObject:self.cameraView.cancelButton];
         NSMutableArray *barItems = [[NSMutableArray alloc] initWithArray:self.cameraView.navigationBar.items];
 
@@ -229,7 +253,7 @@
         self.cameraView.navigationBar.items = barItems;
     }
 
-    if(self.delegate && [self.delegate respondsToSelector:@selector(userDidCancelCameraViewController:)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidCancelCameraViewController:)]) {
         self.cameraView.navigationBar.items = @[self.cameraView.cancelButton];
     }
 }
@@ -252,35 +276,40 @@
 #endif
 }
 
-#pragma mark Camera button logic
+#pragma mark IMCameraViewDelegate
+
 - (void)userDidTapCaptureButtonFromCameraView:(IMCameraView *)cameraView {
     dispatch_async(self.captureSessionQueue, ^{
         AVCaptureConnection *connection = [self.stillCameraOutput connectionWithMediaType:AVMediaTypeVideo];
-        [self.stillCameraOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef sampleBuffer, NSError *error) {
-            if (error) {
-                NSLog(@"error while capturing still image: %@", error);
-                [self showCaptureErrorAlertTitle:@"Problems" message:@"Yikes! There was a problem taking the photo."];
-            } else {
-                // if the session preset .Photo is used, or if explicitly set in the device's outputSettings
-                // we get the data already compressed as JPEG
-                NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:sampleBuffer];
+        if (connection) {
+            [self.stillCameraOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef sampleBuffer, NSError *error) {
+                if (error) {
+                    NSLog(@"error while capturing still image: %@", error);
+                    [self showCaptureErrorAlertTitle:@"Problems" message:@"Yikes! There was a problem taking the photo."];
+                } else {
+                    // if the session preset .Photo is used, or if explicitly set in the device's outputSettings
+                    // we get the data already compressed as JPEG
+                    NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:sampleBuffer];
 
-                // the sample buffer also contains the metadata, in case we want to modify it
-                NSDictionary *metadata = (__bridge NSDictionary *) CMCopyDictionaryOfAttachments(nil, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
+                    // the sample buffer also contains the metadata, in case we want to modify it
+                    NSDictionary *metadata = (__bridge NSDictionary *) CMCopyDictionaryOfAttachments(nil, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
 
-                UIImage *image = [UIImage imageWithData:imageData];
-                if (image) {
-                    AVCaptureDeviceInput *currentCameraInput = self.captureSession.inputs.firstObject;
-                    if (currentCameraInput.device.position == AVCaptureDevicePositionFront) {
-                        image = [IMDrawingUtils flipImage:image];
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    if (image) {
+                        AVCaptureDeviceInput *currentCameraInput = self.captureSession.inputs.firstObject;
+                        if (currentCameraInput.device.position == AVCaptureDevicePositionFront) {
+                            image = [IMDrawingUtils flipImage:image];
+                        }
+
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (self.delegate && [self.delegate respondsToSelector:@selector(userDidCaptureImage:metadata:fromCameraViewController:)]) {
+                                [self.delegate userDidCaptureImage:image metadata:metadata fromCameraViewController:self];
+                            }
+                        });
                     }
-
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.delegate userDidCaptureImage:image metadata:metadata fromCameraViewController:self];
-                    });
                 }
-            }
-        }];
+            }];
+        }
     });
 }
 
@@ -332,6 +361,7 @@
         picker.allowsEditing = NO;
         picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         picker.modalPresentationStyle = UIModalPresentationCurrentContext;
+        picker.navigationBar.tintColor = [UIColor colorWithRed:10.0f / 255.0f green:140.0f / 255.0f blue:255.0f / 255.0f alpha:1.0f];
 
         [self presentViewController:picker animated:YES completion:nil];
     } else {
@@ -340,7 +370,9 @@
 }
 
 - (void)userDidTapCancelButtonFromCameraView:(IMCameraView *)cameraView {
-    [self.delegate userDidCancelCameraViewController:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidCancelCameraViewController:)]) {
+        [self.delegate userDidCancelCameraViewController:self];
+    }
 }
 
 - (void)showCaptureErrorAlertTitle:(NSString *)title message:(NSString *)message {
@@ -352,7 +384,9 @@
 #pragma mark UIImagePickerControllerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
-    [self.delegate userDidPickMediaWithInfo:info fromImagePickerController:picker];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidPickMediaWithInfo:fromImagePickerController:)]) {
+        [self.delegate userDidPickMediaWithInfo:info fromImagePickerController:picker];
+    }
 }
 
 + (instancetype)imojiCameraViewControllerWithSession:(IMImojiSession *)session {

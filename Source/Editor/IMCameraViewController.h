@@ -24,11 +24,7 @@
 //
 
 #import <ImojiSDK/IMImojiSession.h>
-
-//extern CGFloat const NavigationBarHeight;
-//extern CGFloat const DefaultButtonTopOffset;
-//extern CGFloat const CaptureButtonBottomOffset;
-//extern CGFloat const CameraViewBottomButtonBottomOffset;
+#import <ImojiSDKUI/IMCameraView.h>
 
 @protocol IMCameraViewControllerDelegate;
 
@@ -37,14 +33,7 @@
 @property(nonatomic, strong, readonly, nonnull) IMImojiSession *session;
 @property(nonatomic, readonly) UIImageOrientation currentOrientation;
 
-// Top toolbar
-//@property(nonatomic, strong, readonly, nullable) UIToolbar *navigationBar;
-//@property(nonatomic, strong, readonly, nullable) UIBarButtonItem *cancelButton;
-//
-//// Bottom buttons
-//@property(nonatomic, strong, readonly, nullable) UIButton *captureButton;
-//@property(nonatomic, strong, readonly, nullable) UIButton *flipButton;
-//@property(nonatomic, strong, readonly, nullable) UIButton *photoLibraryButton;
+@property(nonatomic, strong, nullable) IMCameraView *cameraView;
 
 @property(nonatomic, weak, nullable) id <IMCameraViewControllerDelegate> delegate;
 

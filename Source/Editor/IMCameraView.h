@@ -37,15 +37,15 @@ extern CGFloat const CameraViewBottomButtonBottomOffset;
 @interface IMCameraView : UIView
 
 // Top toolbar
-@property(nonatomic, strong, readonly, nullable) UIToolbar *navigationBar;
-@property(nonatomic, strong, readonly, nullable) UIBarButtonItem *cancelButton;
+@property(nonatomic, strong, nullable) UIToolbar *navigationBar;
+@property(nonatomic, strong, nullable) UIBarButtonItem *cancelButton;
 
 // Bottom buttons
-@property(nonatomic, strong, readonly, nullable) UIButton *captureButton;
-@property(nonatomic, strong, readonly, nullable) UIButton *flipButton;
-@property(nonatomic, strong, readonly, nullable) UIButton *photoLibraryButton;
+@property(nonatomic, strong, nullable) UIButton *captureButton;
+@property(nonatomic, strong, nullable) UIButton *flipButton;
+@property(nonatomic, strong, nullable) UIButton *photoLibraryButton;
 
-@property(nonatomic, weak, nullable) id<IMCameraViewDelegate> delegate;
+@property(nonatomic, weak, nullable) id <IMCameraViewDelegate> delegate;
 
 @end
 
