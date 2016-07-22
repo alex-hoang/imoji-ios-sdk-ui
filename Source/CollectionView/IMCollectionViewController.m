@@ -423,31 +423,31 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
 }
 
 - (void)userDidCaptureImage:(UIImage *)image metadata:(NSDictionary *)metadata fromCameraViewController:(IMCameraViewController *)viewController {
-    IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session: self.session];
+    IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session:self.session];
     createImojiViewController.createDelegate = self;
     createImojiViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     createImojiViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [viewController presentViewController:createImojiViewController animated: true completion: nil];
+    [viewController presentViewController:createImojiViewController animated:YES completion:nil];
 }
 
 - (void)userDidPickMediaWithInfo:(NSDictionary<NSString *, id> *__nonnull)info fromImagePickerController:(UIImagePickerController *)picker {
     UIImage *image = info[@"UIImagePickerControllerOriginalImage"];
-    IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session: self.session];
+    IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session:self.session];
     createImojiViewController.createDelegate = self;
     createImojiViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     createImojiViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [picker presentViewController:createImojiViewController animated: true completion: nil];
+    [picker presentViewController:createImojiViewController animated:YES completion:nil];
 }
 
 #pragma mark UIImagePickerControllerDelegate
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     UIImage *image = info[@"UIImagePickerControllerOriginalImage"];
-    IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session: self.session];
+    IMCreateImojiViewController *createImojiViewController = [[IMCreateImojiViewController alloc] initWithSourceImage:image session:self.session];
     createImojiViewController.createDelegate = self;
     createImojiViewController.modalPresentationStyle = UIModalPresentationFullScreen;
     createImojiViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [picker presentViewController:createImojiViewController animated: true completion: nil];
+    [picker presentViewController:createImojiViewController animated:YES completion:nil];
 }
 
 #pragma mark IMCreateImojiViewControllerDelegate

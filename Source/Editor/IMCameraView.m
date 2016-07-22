@@ -24,7 +24,7 @@
 //
 
 #import <Masonry/View+MASAdditions.h>
-#import "IMCameraView.h"
+#import <ImojiSDKUI/IMCameraView.h>
 
 CGFloat const NavigationBarHeight = 82.0f;
 CGFloat const DefaultButtonTopOffset = 30.0f;
@@ -103,36 +103,30 @@ CGFloat const CameraViewBottomButtonBottomOffset = 28.0f;
     }];
 }
 
-//- (void)determineCancelCameraButtonVisibility {
-//    if(self.navigationBar.items) {
-//        NSUInteger index = [self.navigationBar.items indexOfObject:self.cancelButton];
-//        NSMutableArray *barItems = [[NSMutableArray alloc] initWithArray:self.navigationBar.items];
-//
-//        [barItems removeObjectAtIndex:index];
-//
-//        self.navigationBar.items = barItems;
-//    }
-//
-//    if(self.delegate && [self.delegate respondsToSelector:@selector(userDidTapCancelButtonFromCameraView:)]) {
-//        self.navigationBar.items = @[self.cancelButton];
-//    }
-//}
-
 #pragma mark Camera button logic
+
 - (void)captureButtonTapped {
-    [self.delegate userDidTapCaptureButtonFromCameraView:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapCaptureButtonFromCameraView:)]) {
+        [self.delegate userDidTapCaptureButtonFromCameraView:self];
+    }
 }
 
 - (void)flipButtonTapped {
-    [self.delegate userDidTapFlipButtonFromCameraView:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapFlipButtonFromCameraView:)]) {
+        [self.delegate userDidTapFlipButtonFromCameraView:self];
+    }
 }
 
 - (void)photoLibraryButtonTapped {
-    [self.delegate userDidTapPhotoLibraryButtonFromCameraView:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapPhotoLibraryButtonFromCameraView:)]) {
+        [self.delegate userDidTapPhotoLibraryButtonFromCameraView:self];
+    }
 }
 
 - (void)cancelButtonTapped {
-    [self.delegate userDidTapCancelButtonFromCameraView:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapCancelButtonFromCameraView:)]) {
+        [self.delegate userDidTapCancelButtonFromCameraView:self];
+    }
 }
 
 @end
