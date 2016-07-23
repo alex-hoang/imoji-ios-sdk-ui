@@ -58,7 +58,7 @@ extension PhotoEditingViewController: PHContentEditingController {
         loadView()
     }
 
-    func finishContentEditingWithCompletionHandler(completionHandler: (PHContentEditingOutput) -> Void) {
+    func finishContentEditingWithCompletionHandler(completionHandler: (PHContentEditingOutput?) -> Void) {
         // Update UI to reflect that editing has finished and output is being rendered.
 
         // Render and provide output on a background queue.

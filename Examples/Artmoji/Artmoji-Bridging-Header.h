@@ -28,6 +28,7 @@
 
 #import "ImojiSDK/ImojiSDK.h"
 #import "ImojiSDKUI/IMCameraViewController.h"
+#import "ImojiSDKUI/IMCameraView.h"
 #import "ImojiSDKUI/IMCollectionViewController.h"
 #import "ImojiSDKUI/IMCreateImojiViewController.h"
 #import "ImojiSDKUI/IMCreateImojiView.h"
