@@ -43,11 +43,11 @@ class MainCameraViewController: IMCameraViewController {
     override func loadView() {
         super.loadView()
         
-        let cancelButtonView = cancelButton?.customView as? UIButton
+        let cancelButtonView = cameraView?.cancelButton?.customView as? UIButton
         cancelButtonView?.setImage(UIImage(named: "Artmoji-Cancel"), forState: UIControlState.Normal)
-        captureButton?.setImage(UIImage(named: "Artmoji-Circle"), forState: UIControlState.Normal)
-        flipButton?.setImage(UIImage(named: "Artmoji-Camera-Flip"), forState: UIControlState.Normal)
-        photoLibraryButton?.setImage(UIImage(named: "Artmoji-Photo-Library"), forState: UIControlState.Normal)
+        cameraView?.captureButton?.setImage(UIImage(named: "Artmoji-Circle"), forState: UIControlState.Normal)
+        cameraView?.flipButton?.setImage(UIImage(named: "Artmoji-Camera-Flip"), forState: UIControlState.Normal)
+        cameraView?.photoLibraryButton?.setImage(UIImage(named: "Artmoji-Photo-Library"), forState: UIControlState.Normal)
     }
 }
 

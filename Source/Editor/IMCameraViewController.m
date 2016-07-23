@@ -218,6 +218,7 @@
             break;
         case AVAuthorizationStatusDenied: {
             // the user explicitly denied camera usage
+#if !IMOJI_APP_EXTENSION
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Camera" message:@"Taking photos requires access to your camera." preferredStyle:UIAlertControllerStyleAlert];
 
             [alert addAction:[UIAlertAction actionWithTitle:@"Go to settings" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
@@ -225,7 +226,7 @@
             }]];
 
             [self presentViewController:alert animated:YES completion:nil];
-
+#endif
             break;
         }
         case AVAuthorizationStatusRestricted: {
