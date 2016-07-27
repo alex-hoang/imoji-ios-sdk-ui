@@ -24,9 +24,9 @@
 //
 
 #import <ImojiSDK/IMImojiSession.h>
-#import "IMSuggestionView.h"
-#import "View+MASAdditions.h"
-#import "IMSuggestionCollectionView.h"
+#import <ImojiSDKUI/IMSuggestionView.h>
+#import <Masonry/View+MASAdditions.h>
+#import <ImojiSDKUI/IMSuggestionCollectionView.h>
 
 CGFloat const IMSuggestionViewDefaultHeight = 91.f;
 CGFloat const IMSuggestionViewBorderHeight = 1.f;
@@ -43,7 +43,7 @@ CGFloat const IMSuggestionViewBorderHeight = 1.f;
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
 
-        _collectionView = [[IMSuggestionCollectionView alloc] initWithSession:session];
+        _collectionView = [self createSuggestionViewWithSession:session];
         self.collectionView.backgroundColor = [UIColor clearColor];
 
         [self addSubview:self.collectionView];
@@ -56,6 +56,10 @@ CGFloat const IMSuggestionViewBorderHeight = 1.f;
     }
 
     return self;
+}
+
+- (IMCollectionView *)createSuggestionViewWithSession:(IMImojiSession *)session {
+    return [[IMSuggestionCollectionView alloc] initWithSession:session];
 }
 
 + (instancetype)imojiSuggestionViewWithSession:(IMImojiSession *)session {

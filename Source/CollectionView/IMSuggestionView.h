@@ -24,6 +24,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @class IMCollectionView;
 @class IMImojiSession;
@@ -34,6 +35,8 @@ extern CGFloat const IMSuggestionViewBorderHeight;
 @interface IMSuggestionView : UIView
 
 @property(nonatomic, strong, readonly, nonnull) IMCollectionView *collectionView;
+
+- (nonnull instancetype)initWithSession:(nonnull IMImojiSession *)session;
 
 /**
  * @abstract Creates a collection view with the specified Imoji session
