@@ -43,7 +43,7 @@ CGFloat const IMSuggestionViewBorderHeight = 1.f;
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
 
-        _collectionView = [self createSuggestionViewWithSession:session];
+        _collectionView = [self createSuggestionCollectionViewWithSession:session];
         self.collectionView.backgroundColor = [UIColor clearColor];
 
         [self addSubview:self.collectionView];
@@ -58,7 +58,7 @@ CGFloat const IMSuggestionViewBorderHeight = 1.f;
     return self;
 }
 
-- (IMCollectionView *)createSuggestionViewWithSession:(IMImojiSession *)session {
+- (IMCollectionView *)createSuggestionCollectionViewWithSession:(IMImojiSession *)session {
     return [[IMSuggestionCollectionView alloc] initWithSession:session];
 }
 
