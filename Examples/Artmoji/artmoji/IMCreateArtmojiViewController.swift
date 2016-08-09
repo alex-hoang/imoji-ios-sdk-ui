@@ -225,8 +225,8 @@ extension IMCreateArtmojiViewController: IMCreateArtmojiViewDelegate {
 
 // MARK: - IMToolbarDelegate
 extension IMCreateArtmojiViewController: IMToolbarDelegate {
-    public func userDidSelectCategory(category: IMImojiCategoryObject, fromCollectionView collectionView: IMCollectionView) {
-        collectionView.loadImojisFromCategory(category)
+    public func userDidSelectCategory(category: IMImojiCategoryObject, contributingImoji imojiImage: IMImojiImageReference?, fromCollectionView collectionView: IMCollectionView) {
+        collectionView.loadImojisFromCategory(category, contributingImoji: imojiImage)
     }
     
     public func userDidSelectToolbarButton(buttonType: IMToolbarButtonType) {

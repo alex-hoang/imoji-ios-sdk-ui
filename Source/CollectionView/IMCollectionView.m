@@ -32,9 +32,7 @@
 #import "IMResourceBundleUtil.h"
 #import "IMConnectivityUtil.h"
 #import "IMCollectionReusableAttributionView.h"
-#import "IMArtist.h"
 #import "IMCollectionReusableHeaderView.h"
-#import "IMCategoryAttribution.h"
 #import "IMCollectionLoadingView.h"
 
 #if IMMessagesFrameworkSupported
@@ -235,6 +233,8 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
             id image = self.images[(NSUInteger) indexPath.section][(NSUInteger) indexPath.item];
             if ([image isKindOfClass:[UIImage class]]) {
                 [cell loadImojiCategory:categoryObject.title imojiImojiImage:image];
+            } else if ([image isKindOfClass:[IMImojiImageReference class]]) {
+                [cell loadImojiCategory:categoryObject.title imojiImojiImage:((IMImojiImageReference *) image).image];
             } else {
                 [cell loadImojiCategory:nil imojiImojiImage:nil];
             }
@@ -327,11 +327,11 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
         }
 
     } else if ([cellContent isKindOfClass:[IMImojiCategoryObject class]]) {
-        if ([self.collectionViewDelegate respondsToSelector:@selector(userDidSelectCategory:fromCollectionView:)]) {
-            [self.collectionViewDelegate userDidSelectCategory:cellContent
-                                            fromCollectionView:self];
+        IMImojiImageReference *imojiImage = self.images[(NSUInteger) indexPath.section][(NSUInteger) indexPath.row];
+        if ([self.collectionViewDelegate respondsToSelector:@selector(userDidSelectCategory:contributingImoji:fromCollectionView:)]) {
+            [self.collectionViewDelegate userDidSelectCategory:cellContent contributingImoji:imojiImage fromCollectionView:self];
         } else {
-            [self loadImojisFromCategory:cellContent];
+            [self loadImojisFromCategory:cellContent contributingImoji:imojiImage];
         }
     }
 
@@ -607,7 +607,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 - (void)loadImojisFromSearch:(NSString *)searchTerm {
     self.shouldShowAttribution = self.shouldLoadNewSection = NO;
     self.currentHeader = searchTerm;
-    [self loadImojisFromSearch:searchTerm offset:nil];
+    [self loadImojisFromSearch:searchTerm contributingImoji:nil offset:nil];
 }
 
 - (void)loadImojisFromSentence:(NSString *)sentence {
@@ -743,7 +743,11 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
             }];
 }
 
-- (void)loadImojisFromCategory:(nonnull IMImojiCategoryObject *)category {
+- (void)loadImojisFromCategory:(IMImojiCategoryObject *)category {
+    [self loadImojisFromCategory:category contributingImoji:nil];
+}
+
+- (void)loadImojisFromCategory:(IMImojiCategoryObject *)category contributingImoji:(IMImojiImageReference *)imojiImage {
     self.shouldShowAttribution = self.shouldLoadNewSection = NO;
     self.currentHeader = category.title;
 
@@ -761,7 +765,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         self.currentAttribution = category.attribution;
     }
 
-    [self loadImojisFromSearch:category.identifier offset:nil];
+    [self loadImojisFromSearch:category.identifier contributingImoji:imojiImage offset:nil];
 }
 
 - (void)displaySplashOfType:(IMCollectionViewSplashCellType)splashType {
@@ -794,7 +798,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 #pragma mark Private Imoji Loading Methods
 
-- (void)loadImojisFromSearch:(NSString *)searchTerm offset:(NSNumber *)offset {
+- (void)loadImojisFromSearch:(NSString *)searchTerm contributingImoji:(IMImojiImageReference *)imojiImage offset:(NSNumber *)offset {
     if (![IMConnectivityUtil sharedInstance].hasConnectivity) {
         self.contentType = IMCollectionViewContentTypeNoConnectionSplash;
         return;
@@ -815,6 +819,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     self.imojiOperation = operation =
             [self.session searchImojisWithTerm:searchTerm
                                         offset:offset
+                           contributingImojiId:imojiImage ? imojiImage.identifier : nil
                                numberOfResults:@(self.numberOfImojisToLoad)
                      resultSetResponseCallback:^(IMImojiResultSetMetadata *metadata, NSError *error) {
                          if (!operation.isCancelled) {
@@ -917,7 +922,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                                   operation:self.imojiOperation];
                 }
             } else {
-                [self loadImojisFromSearch:self.currentSearchTerm offset:@([self numberOfItemsInSection:self.numberOfSections - 1] + 1)];
+                [self loadImojisFromSearch:self.currentSearchTerm contributingImoji:nil offset:@([self numberOfItemsInSection:self.numberOfSections - 1] + 1)];
             }
         }];
     }
@@ -1076,11 +1081,24 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                           options:self.renderingOptions
                          callback:^(UIImage *image, NSError *renderError) {
                              if (!operation.isCancelled) {
-                                 [self setImageContents:image
-                                              atSection:section
-                                                atIndex:index
-                                                 offset:offset
-                                              operation:operation];
+                                 // Set the image as an IMImojiImageReference only when the content is a category
+                                 // The imoji identifier will be used to retrieve a category's imoji image. Then it is displayed
+                                 // as the first imoji in the collection view when loading a category
+                                 if ([content isKindOfClass:[IMImojiCategoryObject class]] || self.contentType == IMCollectionViewContentTypeImojiCategories) {
+                                     IMImojiImageReference *imojiImage = [IMImojiImageReference referenceWithIdentifier:imoji.identifier image:image];
+
+                                     [self setImageContents:imojiImage
+                                                  atSection:section
+                                                    atIndex:index
+                                                     offset:offset
+                                                  operation:operation];
+                                 } else {
+                                     [self setImageContents:image
+                                                  atSection:section
+                                                    atIndex:index
+                                                     offset:offset
+                                             operation:operation];
+                                 }
                              }
                          }];
     }
@@ -1159,6 +1177,10 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 - (id)contentForIndexPath:(NSIndexPath *)path {
     return path.row > [self numberOfItemsInSection:path.section] ? nil : self.content[(NSUInteger) path.section][@"imojis"][(NSUInteger) path.row];
+}
+
+- (id)imageForIndexPath:(NSIndexPath *)path {
+    return path.row > [self numberOfItemsInSection:path.section] ? nil : self.images[(NSUInteger) path.section][(NSUInteger) path.row];
 }
 
 - (BOOL)isPathShowingLoadingIndicator:(NSIndexPath *)indexPath {

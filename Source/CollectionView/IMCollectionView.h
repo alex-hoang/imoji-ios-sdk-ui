@@ -27,6 +27,7 @@
 #import <UIKit/UIKit.h>
 #import <ImojiSDK/IMImojiSession.h>
 #import <ImojiSDK/IMCategoryFetchOptions.h>
+#import <ImojiSDK/IMImojiImageReference.h>
 #import "IMCollectionViewSplashCell.h"
 
 typedef NS_ENUM(NSUInteger, IMCollectionViewContentType) {
@@ -170,8 +171,16 @@ extern NSUInteger const IMCollectionViewNumberOfItemsToLoad;
 
 /**
  * @abstract Loads Imoji stickers from a category
+ * DEPRECATED: Use loadImojisFromCategory:contributingImoji: instead
  */
-- (void)loadImojisFromCategory:(nonnull IMImojiCategoryObject *)category;
+- (void)loadImojisFromCategory:(nonnull IMImojiCategoryObject *)category DEPRECATED_ATTRIBUTE;
+
+/**
+ * @abstract Loads Imoji stickers from a category
+ * In addition, the category's IMImojiImageReference is passed along.
+ * When loading a category, if contributingImoji is not nil, then loading a category will place the contributingImoji image as the first result.
+ */
+- (void)loadImojisFromCategory:(nonnull IMImojiCategoryObject *)category contributingImoji:(nullable IMImojiImageReference *)imojiImage;
 
 /**
  * @abstract Shows specified splash content in the collection view
@@ -185,6 +194,8 @@ extern NSUInteger const IMCollectionViewNumberOfItemsToLoad;
 - (void)processCellAnimations:(nonnull NSIndexPath *)currentIndexPath;
 
 - (nullable id)contentForIndexPath:(nonnull NSIndexPath *)path;
+
+- (nullable id)imageForIndexPath:(nonnull NSIndexPath *)path;
 
 - (BOOL)isPathShowingLoadingIndicator:(nonnull NSIndexPath *)indexPath;
 
@@ -211,8 +222,14 @@ extern NSUInteger const IMCollectionViewNumberOfItemsToLoad;
 
 /**
  * @abstract Notified when a user selected a category
+ * DEPRECATED: Use userDidSelectCategory:contributingImoji:fromCollectionView instead
  */
-- (void)userDidSelectCategory:(nonnull IMImojiCategoryObject *)category fromCollectionView:(nonnull IMCollectionView *)collectionView;
+- (void)userDidSelectCategory:(nonnull IMImojiCategoryObject *)category fromCollectionView:(nonnull IMCollectionView *)collectionView DEPRECATED_ATTRIBUTE;
+
+/**
+ * @abstract Notified when a user selected a category.
+ */
+- (void)userDidSelectCategory:(nonnull IMImojiCategoryObject *)category contributingImoji:(nullable IMImojiImageReference *)imojiImage fromCollectionView:(nonnull IMCollectionView *)collectionView;
 
 - (void)imojiCollectionViewDidScroll:(nonnull IMCollectionView *)collectionView;
 

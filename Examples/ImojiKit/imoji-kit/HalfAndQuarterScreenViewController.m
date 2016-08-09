@@ -255,7 +255,7 @@
     [self.messageThreadView sendMessageWithImoji:imoji];
 }
 
-- (void)userDidSelectCategory:(nonnull IMImojiCategoryObject *)category fromCollectionView:(nonnull IMCollectionView *)collectionView {
+- (void)userDidSelectCategory:(nonnull IMImojiCategoryObject *)category contributingImoji:(nullable IMImojiImageReference *)imojiImage fromCollectionView:(nonnull IMCollectionView *)collectionView {
     self.imojiSearchViewActionTapped = YES;
 
     [self showHalfScreenSuggestionViewAnimated];
