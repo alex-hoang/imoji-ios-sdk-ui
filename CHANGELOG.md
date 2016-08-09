@@ -1,5 +1,10 @@
 # Imoji iOS UI Widgets Changes
 
+### Version 2.2.2
+
+* Adds support for imoji-ios-sdk 2.3.2. Update and deprecate relevant methods to support IMImojiImageReference.
+* Category's preview imoji will now appear as the first result when loading a category.
+
 ### Version 2.2.1
 
 * Generalize IMCameraViewController for use in the ImojiSDKUI.

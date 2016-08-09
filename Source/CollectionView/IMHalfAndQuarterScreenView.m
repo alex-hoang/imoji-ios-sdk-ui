@@ -237,22 +237,26 @@
 #pragma mark IMCollectionView Delegate
 
 - (void)userDidSelectCategory:(IMImojiCategoryObject *)category fromCollectionView:(IMCollectionView *)collectionView {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidSelectCategory:fromCollectionView:)]) {
-        [self.delegate userDidSelectCategory:category fromCollectionView:collectionView];
+    [self userDidSelectCategory:category contributingImoji:nil fromCollectionView:collectionView];
+}
+
+- (void)userDidSelectCategory:(IMImojiCategoryObject *)category contributingImoji:(IMImojiImageReference *)imojiImage fromCollectionView:(IMCollectionView *)collectionView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidSelectCategory:contributingImoji:fromCollectionView:)]) {
+        [self.delegate userDidSelectCategory:category contributingImoji:imojiImage fromCollectionView:collectionView];
     }
 
     self.searchView.searchTextField.text = category.title;
     self.searchView.searchTextField.rightView.hidden = NO;
     self.searchView.createButton.hidden = YES;
     self.searchView.recentsButton.hidden = YES;
-    
+
     if (self.searchView.createAndRecentsEnabled && self.searchView.recentsButton.selected) {
         self.searchView.recentsButton.selected = NO;
         self.searchView.searchTextField.rightView = self.searchView.clearButton;
 
         if (![self.searchView.searchIconImageView isDescendantOfView:self.searchView.searchViewContainer]) {
             [self.searchView.searchViewContainer addSubview:self.searchView.searchIconImageView];
-            
+
             [self.searchView.searchIconImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(self.searchView.searchViewContainer);
                 make.centerY.equalTo(self.searchView.searchViewContainer);
@@ -260,10 +264,10 @@
             }];
         }
     }
-    
+
     [self.searchView showBackButton];
 
-    [collectionView loadImojisFromCategory:category];
+    [collectionView loadImojisFromCategory:category contributingImoji:imojiImage];
 }
 
 + (instancetype)imojiStickerSearchContainerViewWithSession:(IMImojiSession *)session {

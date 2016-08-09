@@ -184,8 +184,12 @@
 #pragma mark IMCollectionView Delegate
 
 - (void)userDidSelectCategory:(nonnull IMImojiCategoryObject *)category fromCollectionView:(nonnull IMCollectionView *)collectionView {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidSelectCategory:fromCollectionView:)]) {
-        [self.delegate userDidSelectCategory:category fromCollectionView:collectionView];
+    [self userDidSelectCategory:category contributingImoji:nil fromCollectionView:collectionView];
+}
+
+- (void)userDidSelectCategory:(IMImojiCategoryObject *)category contributingImoji:(IMImojiImageReference *)imojiImage fromCollectionView:(IMCollectionView *)collectionView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidSelectCategory:contributingImoji:fromCollectionView:)]) {
+        [self.delegate userDidSelectCategory:category contributingImoji:imojiImage fromCollectionView:collectionView];
     }
 
     self.searchView.searchTextField.text = category.title;
@@ -193,7 +197,7 @@
     self.searchView.cancelButton.hidden = NO;
     self.searchView.createButton.hidden = YES;
     self.searchView.recentsButton.hidden = YES;
-    [collectionView loadImojisFromCategory:category];
+    [collectionView loadImojisFromCategory:category contributingImoji:imojiImage];
 }
 
 + (instancetype)imojiStickerSearchContainerViewWithSession:(IMImojiSession *)session {

@@ -230,8 +230,12 @@
 }
 
 - (void)userDidSelectCategory:(IMImojiCategoryObject *)category fromCollectionView:(IMCollectionView *)collectionView {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidSelectCategory:fromCollectionView:)]) {
-        [self.delegate userDidSelectCategory:category fromCollectionView:collectionView];
+    [self userDidSelectCategory:category contributingImoji:nil fromCollectionView:collectionView];
+}
+
+- (void)userDidSelectCategory:(IMImojiCategoryObject *)category contributingImoji:(IMImojiImageReference *)imojiImage fromCollectionView:(IMCollectionView *)collectionView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(userDidSelectCategory:contributingImoji:fromCollectionView:)]) {
+        [self.delegate userDidSelectCategory:category contributingImoji:imojiImage fromCollectionView:collectionView];
     }
 
     self.searchView.searchTextField.text = category.title;
@@ -241,7 +245,7 @@
     self.searchView.recentsButton.selected = NO;
     [self.searchView showBackButton];
 
-    [collectionView loadImojisFromCategory:category];
+    [collectionView loadImojisFromCategory:category contributingImoji:imojiImage];
 }
 
 - (void)userDidSelectSplash:(IMCollectionViewSplashCellType)splashType fromCollectionView:(IMCollectionView *)collectionView {

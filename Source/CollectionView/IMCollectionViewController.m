@@ -258,13 +258,17 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
 }
 
 - (void)userDidSelectCategory:(IMImojiCategoryObject *)category fromCollectionView:(IMCollectionView *)collectionView {
+    [self userDidSelectCategory:category contributingImoji:nil fromCollectionView:collectionView];
+}
+
+- (void)userDidSelectCategory:(IMImojiCategoryObject *)category contributingImoji:(IMImojiImageReference *)imojiImage fromCollectionView:(IMCollectionView *)collectionView {
     self.searchView.searchTextField.text = category.title;
     self.searchView.searchTextField.rightView.hidden = NO;
     self.searchView.createButton.hidden = YES;
     self.searchView.recentsButton.hidden = YES;
     [self.searchView.searchTextField resignFirstResponder];
 
-    [collectionView loadImojisFromCategory:category];
+    [collectionView loadImojisFromCategory:category contributingImoji:imojiImage];
 }
 
 - (void)imojiCollectionViewDidScroll:(IMCollectionView *)collectionView {
@@ -479,6 +483,7 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
 
     if ([cell isKindOfClass:[IMCategoryCollectionViewCell class]]) {
         IMImojiCategoryObject *imojiCategory = [self.collectionView contentForIndexPath:indexPath];
+        IMImojiImageReference *imojiImage = [self.collectionView imageForIndexPath:indexPath];
 
         UIViewController *previewController = [[UIViewController alloc] init];
         previewController.preferredContentSize = CGSizeMake(0.0, 0.0);
@@ -508,7 +513,7 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
 
         IMCollectionView *previewCollectionView = [IMCollectionView imojiCollectionViewWithSession:self.session];
         previewController.view = previewCollectionView;
-        [previewCollectionView loadImojisFromCategory:imojiCategory];
+        [previewCollectionView loadImojisFromCategory:imojiCategory contributingImoji:imojiImage];
 
         return previewController;
     }
@@ -522,10 +527,11 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
 
     if ([cell isKindOfClass:[IMCategoryCollectionViewCell class]]) {
         IMImojiCategoryObject *imojiCategory = [self.collectionView contentForIndexPath:indexPath];
+        IMImojiImageReference *imojiImage = [self.collectionView imageForIndexPath:indexPath];
 
         self.searchView.searchTextField.text = imojiCategory.title;
         self.searchView.searchTextField.rightView.hidden = NO;
-        [self.collectionView loadImojisFromCategory:imojiCategory];
+        [self.collectionView loadImojisFromCategory:imojiCategory contributingImoji:imojiImage];
     }
 }
 
