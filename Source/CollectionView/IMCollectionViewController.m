@@ -396,7 +396,7 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
     if (self.sentenceParseEnabled) {
         [self.collectionView loadImojisFromSentence:self.searchView.searchTextField.text];
     } else {
-        [self.collectionView loadImojisFromSearch:self.searchView.searchTextField.text];
+        [self.collectionView loadImojisFromSearch:self.searchView.searchTextField.text contributingImoji:nil];
     }
 }
 

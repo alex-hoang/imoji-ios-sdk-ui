@@ -144,8 +144,15 @@ extern NSUInteger const IMCollectionViewNumberOfItemsToLoad;
 /**
  * @abstract Loads Imoji from a given search term into the collection view using searchImojisWithTerm from IMImojiSession
  * The collection view will automatically scroll through multiple pages of stickers if they exist
+ * DEPRECATED: Use loadImojisFromSearch:contributingImoji: instead
  */
-- (void)loadImojisFromSearch:(nullable NSString *)searchTerm;
+- (void)loadImojisFromSearch:(nullable NSString *)searchTerm DEPRECATED_ATTRIBUTE;
+
+/**
+ * @abstract Loads Imoji from a given search term into the collection view using searchImojisWithTerm from IMImojiSession
+ * The collection view will automatically scroll through multiple pages of stickers if they exist
+ */
+- (void)loadImojisFromSearch:(nullable NSString *)searchTerm contributingImoji:(nullable IMImojiImageReference *)contributingImoji;
 
 /**
  * @abstract Parses a given sentence for popular Imoji stickers

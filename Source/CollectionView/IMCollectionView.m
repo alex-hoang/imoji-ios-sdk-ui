@@ -605,9 +605,13 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)loadImojisFromSearch:(NSString *)searchTerm {
+    [self loadImojisFromSearch:searchTerm contributingImoji:nil];
+}
+
+- (void)loadImojisFromSearch:(NSString *)searchTerm contributingImoji:(IMImojiImageReference *)contributingImoji {
     self.shouldShowAttribution = self.shouldLoadNewSection = NO;
     self.currentHeader = searchTerm;
-    [self loadImojisFromSearch:searchTerm contributingImoji:nil offset:nil];
+    [self loadImojisFromSearch:searchTerm contributingImoji:contributingImoji offset:nil];
 }
 
 - (void)loadImojisFromSentence:(NSString *)sentence {
