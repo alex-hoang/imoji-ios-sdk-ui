@@ -203,10 +203,8 @@ extension IMCreateArtmojiViewController: IMCreateArtmojiViewDelegate {
 
         collectionViewController.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         collectionViewController.collectionView.infiniteScroll = true
-        collectionViewController.collectionView.collectionViewDelegate = self
         collectionViewController.collectionViewControllerDelegate = self
-        collectionViewController.searchView.delegate = self
-        
+
         presentViewController(collectionViewController, animated: true) { finished in
             #if !NOT_PHOTO_EXTENSION
             collectionViewController.topToolbar.mas_makeConstraints { make in
@@ -225,10 +223,6 @@ extension IMCreateArtmojiViewController: IMCreateArtmojiViewDelegate {
 
 // MARK: - IMToolbarDelegate
 extension IMCreateArtmojiViewController: IMToolbarDelegate {
-    public func userDidSelectCategory(category: IMImojiCategoryObject, contributingImoji imojiImage: IMImojiImageReference?, fromCollectionView collectionView: IMCollectionView) {
-        collectionView.loadImojisFromCategory(category, contributingImoji: imojiImage)
-    }
-    
     public func userDidSelectToolbarButton(buttonType: IMToolbarButtonType) {
         switch buttonType {
             case IMToolbarButtonType.Trending:
@@ -284,6 +278,17 @@ extension IMCreateArtmojiViewController: IMCreateImojiViewControllerDelegate {
 
 // MARK: - IMCollectionViewControllerDelegate
 extension IMCreateArtmojiViewController: IMCollectionViewControllerDelegate {
+    public func userDidSelectCategory(category: IMImojiCategoryObject, contributingImoji imojiImage: IMImojiImageReference?, fromCollectionView collectionView: IMCollectionView) {
+        let collectionViewController = presentedViewController as! IMCollectionViewController
+        collectionViewController.searchView.searchTextField.text = category.title
+        collectionViewController.searchView.searchTextField.rightView?.hidden = false
+        collectionViewController.searchView.createButton?.hidden = true
+        collectionViewController.searchView.recentsButton?.hidden = true
+        collectionViewController.searchView.searchTextField.resignFirstResponder()
+        
+        collectionView.loadImojisFromCategory(category, contributingImoji: imojiImage)
+    }
+    
     public func userDidSelectSplash(splashType: IMCollectionViewSplashCellType, fromCollectionView collectionView: IMCollectionView) {
         switch splashType {
             case IMCollectionViewSplashCellType.NoResults:
@@ -294,18 +299,13 @@ extension IMCreateArtmojiViewController: IMCollectionViewControllerDelegate {
                 break;
         }
     }
-}
-
-extension IMCreateArtmojiViewController: IMSearchViewDelegate {
-    public func userDidTapBackButtonFromSearchView(searchView: IMSearchView!) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-}
-
-// MARK: - IMCollectionViewDelegate
-extension IMCreateArtmojiViewController: IMCollectionViewDelegate {
+    
     public func userDidSelectImoji(imoji: IMImojiObject, fromCollectionView collectionView: IMCollectionView) {
         createArtmojiView.addImoji(imoji)
+    }
+    
+    public func userDidTapBackButtonFromSearchView(searchView: IMSearchView!) {
+        dismissViewControllerAnimated(true, completion: nil)
     }
 }
 
