@@ -295,6 +295,12 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
     }];
 }
 
+- (void)userDidTapBackButtonFromSearchView:(IMSearchView *)searchView {
+    if (self.collectionViewControllerDelegate && [self.collectionViewControllerDelegate respondsToSelector:@selector(userDidTapBackButtonFromSearchView:)]) {
+        [self.collectionViewControllerDelegate userDidTapBackButtonFromSearchView:searchView];
+    }
+}
+
 - (void)userDidTapCancelButtonFromSearchView:(IMSearchView *)searchView {
     if (searchView.recentsButton.selected) {
         [self.collectionView loadRecents];

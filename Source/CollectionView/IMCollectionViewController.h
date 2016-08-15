@@ -31,7 +31,7 @@
 
 @class IMImojiSession;
 
-@protocol IMCollectionViewControllerDelegate <IMToolbarDelegate, IMCollectionViewDelegate>
+@protocol IMCollectionViewControllerDelegate <IMToolbarDelegate, IMCollectionViewDelegate, IMSearchViewDelegate>
 
 @optional
 
