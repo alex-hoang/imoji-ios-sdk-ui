@@ -70,11 +70,18 @@
     _pageControl = [UIPageControl new];
 
     UIView *topImageBorder = [UIView new], *bottomImageBorder = [UIView new];
+    UIView *parentView = [UIView new];
 
-    [self.view addSubview:self.tipsView];
-    [self.view addSubview:self.proceedButton];
-    [self.view addSubview:self.doneButton];
-    [self.view addSubview:self.pageControl];
+    [self.view addSubview:parentView];
+
+    [parentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+    
+    [parentView addSubview:self.tipsView];
+    [parentView addSubview:self.proceedButton];
+    [parentView addSubview:self.doneButton];
+    [parentView addSubview:self.pageControl];
 
     [self.tipsView addSubview:self.tipTitle];
     [self.tipsView addSubview:self.tipDescription];
@@ -83,15 +90,15 @@
     [self.tipsView addSubview:bottomImageBorder];
 
     [self.tipsView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.view).multipliedBy(.961f);
-        make.centerX.equalTo(self.view);
-        make.width.equalTo(self.view).multipliedBy(.72f);
-        make.height.equalTo(self.view).multipliedBy(.615f);
+        make.centerY.equalTo(parentView).multipliedBy(.961f);
+        make.centerX.equalTo(parentView);
+        make.width.equalTo(parentView).multipliedBy(.72f);
+        make.height.equalTo(parentView).multipliedBy(.615f);
     }];
 
     [self.proceedButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.view);
-        make.bottom.equalTo(self.view).multipliedBy(.969f);
+        make.centerX.equalTo(parentView);
+        make.bottom.equalTo(parentView).multipliedBy(.969f);
         make.width.height.equalTo(@60.0f);
     }];
 
