@@ -166,9 +166,17 @@ extern NSUInteger const IMCollectionViewNumberOfItemsToLoad;
 
 /**
  * @abstract Loads Imoji stickers for an authenticated user into the collection view using
- * getImojisForAuthenticatedUserWithResultSetResponseCallback from IMImojiSession
+ * getImojisForAuthenticatedUserWithResultSetResponseCallback from IMImojiSession. Defaults to loading all collected content
+ * DEPRECATED: Use loadCollectedImojisWithType: instead
  */
-- (void)loadUserCollectionImojis;
+- (void)loadUserCollectionImojis DEPRECATED_ATTRIBUTE;
+
+/**
+ * @abstract Loads Imoji stickers for an authenticated user into the collection view using
+ * getImojisForAuthenticatedUserWithResultSetResponseCallback from IMImojiSession. Caller can specify the type of
+ * collected content to load
+ */
+- (void)loadCollectedImojisWithType:(IMImojiCollectionType)collectionType;
 
 /**
  * @abstract Loads Imoji stickers for an authenticated user into the recents view using

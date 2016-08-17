@@ -684,6 +684,10 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)loadUserCollectionImojis {
+    [self loadCollectedImojisWithType:IMImojiCollectionTypeAll];
+}
+
+- (void)loadCollectedImojisWithType:(IMImojiCollectionType)collectionType {
     self.shouldShowAttribution = self.shouldLoadNewSection = NO;
     if (![IMConnectivityUtil sharedInstance].hasConnectivity) {
         self.contentType = IMCollectionViewContentTypeNoConnectionSplash;
@@ -695,7 +699,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
     __block NSOperation *operation;
     self.imojiOperation = operation =
-            [self.session fetchCollectedImojisWithType:IMImojiCollectionTypeAll
+            [self.session fetchCollectedImojisWithType:collectionType
                              resultSetResponseCallback:^(IMImojiResultSetMetadata *metadata, NSError *error) {
                                  if (!operation.isCancelled) {
                                      [self prepareViewForImojiResultSet:metadata.resultCount
