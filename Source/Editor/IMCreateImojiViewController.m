@@ -236,7 +236,11 @@
         make.edges.equalTo(self.creationView);
     }];
 
-    self.view = view;
+    [self.view addSubview:view];
+
+    [view mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
 
     [self setNeedsStatusBarAppearanceUpdate];
 }
