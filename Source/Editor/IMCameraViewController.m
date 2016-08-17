@@ -72,7 +72,10 @@
 
     // Setup AVCaptureSession
     self.captureSession = [[AVCaptureSession alloc] init];
-    self.captureSession.sessionPreset = AVCaptureSessionPresetPhoto;
+
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        self.captureSession.sessionPreset = AVCaptureSessionPresetPhoto;
+    }
 
     // Get available devices and save reference to front and back cameras
     NSArray *availableCameraDevices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
