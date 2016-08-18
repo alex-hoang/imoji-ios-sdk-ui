@@ -36,7 +36,9 @@
 #import "IMCollectionLoadingView.h"
 
 #if IMMessagesFrameworkSupported
+
 #import <Messages/Messages.h>
+
 #endif
 
 NSUInteger const IMCollectionViewNumberOfItemsToLoad = 60;
@@ -79,7 +81,7 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
                                                                      borderStyle:IMImojiObjectBorderStyleSticker
                                                                      imageFormat:IMImojiObjectImageFormatWebP];
         _animatedGifRenderingOptions = [IMImojiObjectRenderingOptions optionsWithAnimationAndRenderSize:IMImojiObjectRenderSizeThumbnail];
-        
+
         _renderingOptions.renderAnimatedIfSupported = YES;
         _preferredImojiDisplaySize = CGSizeMake(100.f, 114.f);
         _animateSelection = YES;
@@ -248,44 +250,44 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
         self.tapGesture.enabled = YES;
         [self.loadingView fadeOutWithDuration:0.1 delay:0];
         IMCollectionViewSplashCellType splashCellType;
-        
+
         switch (self.contentType) {
             case IMCollectionViewContentTypeRecentsSplash:
                 splashCellType = IMCollectionViewSplashCellRecents;
                 break;
-                
+
             case IMCollectionViewContentTypeCollectionSplash:
                 splashCellType = IMCollectionViewSplashCellCollection;
                 break;
-                
+
             case IMCollectionViewContentTypeNoConnectionSplash:
                 splashCellType = IMCollectionViewSplashCellNoConnection;
                 break;
-                
+
             case IMCollectionViewContentTypeEnableFullAccessSplash:
                 splashCellType = IMCollectionViewSplashCellEnableFullAccess;
                 break;
-                
+
             case IMCollectionViewContentTypeNoResultsSplash:
             default:
                 splashCellType = IMCollectionViewSplashCellNoResults;
                 break;
         }
-        
+
         [splashCell showSplashCellType:splashCellType withImageBundle:self.imagesBundle];
         return splashCell;
-        
+
     } else {
         IMCollectionViewCell *cell = [self dequeueReusableCellWithReuseIdentifier:IMCollectionViewCellReuseId forIndexPath:indexPath];
         [cell setupPlaceholderImageWithPosition:(NSUInteger) indexPath.row];
 
         id imojiImage = nil;
         if (indexPath.section < self.images.count &&
-            [self.images[(NSUInteger) indexPath.section] isKindOfClass:[NSArray class]] &&
-            indexPath.row < ((NSArray*)self.images[(NSUInteger) indexPath.section]).count) {
+                [self.images[(NSUInteger) indexPath.section] isKindOfClass:[NSArray class]] &&
+                indexPath.row < ((NSArray *) self.images[(NSUInteger) indexPath.section]).count) {
             imojiImage = self.images[(NSUInteger) indexPath.section][(NSUInteger) indexPath.row];
         }
-        
+
         if ([imojiImage isKindOfClass:[UIImage class]]) {
             [cell loadImojiImage:((UIImage *) imojiImage) animated:YES];
         } else if (self.loadUsingStickerViews) {
@@ -378,12 +380,14 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
 }
 
 #if IMMessagesFrameworkSupported
+
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if (self.loadUsingStickerViews && [cell isKindOfClass:[IMCollectionViewCell class]]) {
         IMCollectionViewCell *viewCell = (IMCollectionViewCell *) cell;
         [viewCell animateCellContents:NO];
     }
 }
+
 #endif
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -476,7 +480,7 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
                         layout:(UICollectionViewLayout *)collectionViewLayout
         insetForSectionAtIndex:(NSInteger)section {
     if (self.contentType == IMCollectionViewContentTypeImojiCategories ||
-        self.contentType == IMCollectionViewContentTypeImojis) {
+            self.contentType == IMCollectionViewContentTypeImojis) {
         return UIEdgeInsetsMake(0.0f, 0.0f, 7.0f, 0.0f);
     }
 
@@ -487,7 +491,7 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
                              layout:(UICollectionViewLayout *)collectionViewLayout
 minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     if (self.contentType == IMCollectionViewContentTypeImojiCategories ||
-        self.contentType == IMCollectionViewContentTypeImojis) {
+            self.contentType == IMCollectionViewContentTypeImojis) {
         return 7.0f;
     }
 
@@ -739,7 +743,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                                                  error:error
                                emptyResultsContentType:IMCollectionViewContentTypeRecentsSplash];
                 }
-            } imojiResponseCallback:^(IMImojiObject *imoji, NSUInteger index, NSError *error) {
+            }                    imojiResponseCallback:^(IMImojiObject *imoji, NSUInteger index, NSError *error) {
                 if (!operation.isCancelled && !error) {
                     [self renderImojiResult:imoji
                                     content:imoji
@@ -804,6 +808,61 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     }
 }
 
+- (void)loadImojisFromArray:(nonnull NSArray<IMImojiObject *> *)imojis withHeader:(nullable NSString *)header {
+    self.shouldShowAttribution = self.shouldLoadNewSection = NO;
+    self.contentType = IMCollectionViewContentTypeImojis;
+    if (header) {
+        self.currentHeader = header;
+    }
+
+    [self generateNewResultSetOperationWithSearchOffset:nil];
+    [self prepareViewForImojiResultSet:@((imojis.count))
+                                offset:0
+                                 error:nil
+               emptyResultsContentType:IMCollectionViewContentTypeNoResultsSplash];
+
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    }];
+
+    NSUInteger index = 0;
+    for (IMImojiObject *imoji in imojis) {
+        [self renderImojiResult:imoji
+                        content:imoji
+                      atSection:(NSUInteger) self.numberOfSections - 1
+                        atIndex:index
+                         offset:0
+                      operation:operation];
+        ++index;
+    }
+}
+
+- (void)loadImojiCategoriesFromArray:(nonnull NSArray<IMImojiCategoryObject *> *)imojiCategories withHeader:(nullable NSString *)header {
+    self.shouldShowAttribution = self.shouldLoadNewSection = NO;
+    self.contentType = IMCollectionViewContentTypeImojiCategories;
+    if (header) {
+        self.currentHeader = header;
+    }
+
+    [self generateNewResultSetOperationWithSearchOffset:nil];
+    [self prepareViewForImojiResultSet:@((imojiCategories.count))
+                                offset:0
+                                 error:nil
+               emptyResultsContentType:IMCollectionViewContentTypeNoResultsSplash];
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    }];
+
+    NSUInteger index = 0;
+    for (IMImojiCategoryObject *category in imojiCategories) {
+        [self renderImojiResult:category.previewImojis ? category.previewImojis[arc4random() % category.previewImojis.count] : category.previewImoji
+                        content:category
+                      atSection:(NSUInteger) self.numberOfSections - 1
+                        atIndex:index
+                         offset:0
+                      operation:operation];
+        ++index;
+    }
+}
+
 #pragma mark Private Imoji Loading Methods
 
 - (void)loadImojisFromSearch:(NSString *)searchTerm contributingImoji:(IMImojiImageReference *)imojiImage offset:(NSNumber *)offset {
@@ -845,7 +904,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
                              // Prepare to load new section
                              if (self.infiniteScroll && resultCount.unsignedIntegerValue < self.numberOfImojisToLoad &&
-                                 self.contentType != IMCollectionViewContentTypeNoResultsSplash) {
+                                     self.contentType != IMCollectionViewContentTypeNoResultsSplash) {
                                  self.shouldLoadNewSection = YES;
 
                                  // Only append a loading indicator to the next section when resultCount is 0
@@ -877,7 +936,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                                         [NSIndexPath indexPathForItem:[self numberOfItemsInSection:currentSection] - 1
                                                             inSection:currentSection]
                                 ]];
-                            } completion:nil];
+                            }              completion:nil];
                         } else if (self.infiniteScroll && self.shouldLoadNewSection &&
                                 index + 1 == [self numberOfItemsInSection:currentSection] % self.numberOfImojisToLoad) {
                             // append the loading indicator to the next section if
@@ -909,7 +968,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
             } else {
                 [self deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:[self numberOfItemsInSection:self.numberOfSections - 1] inSection:(NSUInteger) self.numberOfSections - 1]]];
             }
-        } completion:^(BOOL finished) {
+        }              completion:^(BOOL finished) {
             if (self.followUpRelatedCategories.count > 0 && self.shouldLoadNewSection) {
                 [self prepareViewForImojiResultSet:@([self.followUpRelatedCategories count])
                                             offset:0
@@ -950,7 +1009,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                                     inSection:(NSUInteger) self.numberOfSections - 1]
         ]];
         [self insertSections:[NSIndexSet indexSetWithIndex:(NSUInteger) self.numberOfSections - 1]];
-    } completion:nil];
+    }              completion:nil];
 }
 
 - (void)generateNewResultSetOperationWithSearchOffset:(NSNumber *)searchOffset {
@@ -1029,8 +1088,8 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         if (insertedPaths.count > 0 || loadingOffset != NSNotFound) {
             // TODO: address assertion issue with insert/removal that occurs when a user quickly switches from categories to imojis
             if (offset == 0) {
-                if(self.shouldLoadNewSection) {
-                    [self reloadSections:[[NSIndexSet alloc] initWithIndex:(NSUInteger)self.numberOfSections - 1]];
+                if (self.shouldLoadNewSection) {
+                    [self reloadSections:[[NSIndexSet alloc] initWithIndex:(NSUInteger) self.numberOfSections - 1]];
                 } else {
                     [self reloadData];
                 }
@@ -1043,7 +1102,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                     if (insertedPaths.count > 0) {
                         [self insertItemsAtIndexPaths:insertedPaths];
                     }
-                } completion:nil];
+                }              completion:nil];
             }
         }
 
@@ -1105,7 +1164,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                                                   atSection:section
                                                     atIndex:index
                                                      offset:offset
-                                             operation:operation];
+                                                  operation:operation];
                                  }
                              }
                          }];
@@ -1137,7 +1196,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
             if (!operation.isCancelled) {
                 [self reloadItemsAtIndexPaths:updates.array];
             }
-        } completion:^(BOOL finished) {
+        }              completion:^(BOOL finished) {
             [self.pendingCollectionViewUpdates removeObjectsInArray:updates.array];
             // recurse in case there are new items to reload
             [self reloadPendingUpdatesWithOperation:operation];

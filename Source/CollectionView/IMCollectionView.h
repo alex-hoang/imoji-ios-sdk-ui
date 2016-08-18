@@ -202,6 +202,20 @@ extern NSUInteger const IMCollectionViewNumberOfItemsToLoad;
  */
 - (void)displaySplashOfType:(IMCollectionViewSplashCellType)splashType;
 
+/**
+ * Loads a preloaded set of Imoji objects into the collection view.
+ * @param imojis The preloaded set of Imoji objects
+ * @param header The header to set
+ */
+- (void)loadImojisFromArray:(nonnull NSArray<IMImojiObject *> *)imojis withHeader:(nullable NSString *)header;
+
+/**
+ * Loads a preloaded set of Imoji Category objects into the collection view.
+ * @param imojis The preloaded set of Imoji Category objects
+ * @param header The header to set
+ */
+- (void)loadImojiCategoriesFromArray:(nonnull NSArray<IMImojiCategoryObject *> *)imojiCategories withHeader:(nullable NSString *)header;
+
 @end
 
 @interface IMCollectionView (Override)
