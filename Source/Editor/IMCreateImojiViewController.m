@@ -35,6 +35,9 @@
 #import "UIImage+Extensions.h"
 #import <Masonry/Masonry.h>
 
+@interface IMCreateImojiViewToolBar : UIToolbar
+
+@end
 
 @interface IMCreateImojiViewController () <IMCreateImojiViewDelegate, UIViewControllerTransitioningDelegate, UIToolbarDelegate>
 
@@ -51,8 +54,8 @@
 @property(nonatomic, readonly) UIView *tagView;
 
 @property(nonatomic, readonly) IMTagCollectionView *tagCollectionView;
-@property(nonatomic, readonly) UIToolbar *navigationToolbar;
-@property(nonatomic, readonly) UIToolbar *traceToolbar;
+@property(nonatomic, readonly) IMCreateImojiViewToolBar *navigationToolbar;
+@property(nonatomic, readonly) IMCreateImojiViewToolBar *traceToolbar;
 
 @property(nonatomic, readonly) UIImageView *imojiPreview;
 
@@ -84,8 +87,8 @@
     _tagView = [UIView new];
 
     _tagCollectionView = [IMTagCollectionView new];
-    _navigationToolbar = [UIToolbar new];
-    _traceToolbar = [UIToolbar new];
+    _navigationToolbar = [IMCreateImojiViewToolBar new];
+    _traceToolbar = [IMCreateImojiViewToolBar new];
 
     _imojiEditor = [IMCreateImojiView new];
     _undoButton = [[UIBarButtonItem alloc] initWithImage:[IMCreateImojiUITheme instance].trimScreenUndoButtonImage
@@ -459,6 +462,17 @@
 
 + (instancetype)controllerWithSourceImage:(UIImage *)sourceImage session:(IMImojiSession *)session {
     return [[self alloc] initWithSourceImage:sourceImage session:session];
+}
+
+@end
+
+@implementation IMCreateImojiViewToolBar
+
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    // only allow toolbar bar buttons to bubble up touch events
+    UIView *view = [super hitTest:point withEvent:event];
+    return view && [NSStringFromClass([view class]) isEqualToString:@"UIToolbarButton"] ? view : nil;
 }
 
 @end
