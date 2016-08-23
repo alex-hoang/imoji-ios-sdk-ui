@@ -321,7 +321,7 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
     if ([cellContent isKindOfClass:[IMImojiObject class]]) {
         if ([self.collectionViewDelegate respondsToSelector:@selector(userDidSelectSticker:andImoji:fromCollectionView:)] && self.loadUsingStickerViews) {
 #if IMMessagesFrameworkSupported
-            MSSticker* sticker = ((MSStickerView *)((IMCollectionViewCell *)[self collectionView:self cellForItemAtIndexPath:indexPath]).imojiView).sticker;
+            MSSticker *sticker = self.images[(NSUInteger) indexPath.section][(NSUInteger) indexPath.row];
             [self.collectionViewDelegate userDidSelectSticker:sticker andImoji:cellContent fromCollectionView:self];
 #endif
         } else if ([self.collectionViewDelegate respondsToSelector:@selector(userDidSelectImoji:fromCollectionView:)]) {
