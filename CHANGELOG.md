@@ -4,6 +4,12 @@
 
 * Adds support for imoji-ios-sdk 2.3.2. Update and deprecate relevant methods to support IMImojiImageReference.
 * Category's preview imoji will now appear as the first result when loading a category.
+* Deprecated loadUserCollectionImojis for loadCollectedImojisWithType.
+* Fixed crash in IMCameraViewController for devices where the camera is unavailable.
+* Cleaned up view hiearchy in IMCreateImojiAssistantViewController and IMCreateImojiViewController.
+* Added utility methods to IMCollectionView to manually load IMCategoryObjects or IMImojiObject's
+* Fixed an issue where users are unable to modify a sticker border on the top or bottom sections of the create screen.
+* Removed support for stock MSStickerView's UITapGestureRecognizer. Callers should implement userDidSelectSticker:andImoji:fromCollectionView from IMCollectionViewDelegate.
 
 ### Version 2.2.1
 
