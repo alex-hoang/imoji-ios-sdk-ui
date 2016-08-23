@@ -319,7 +319,12 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
     id cellContent = self.content[(NSUInteger) indexPath.section][@"imojis"][(NSUInteger) indexPath.row];
 
     if ([cellContent isKindOfClass:[IMImojiObject class]]) {
-        if ([self.collectionViewDelegate respondsToSelector:@selector(userDidSelectImoji:fromCollectionView:)]) {
+        if ([self.collectionViewDelegate respondsToSelector:@selector(userDidSelectSticker:andImoji:fromCollectionView:)] && self.loadUsingStickerViews) {
+#if IMMessagesFrameworkSupported
+            MSSticker* sticker = ((MSStickerView *)((IMCollectionViewCell *)[self collectionView:self cellForItemAtIndexPath:indexPath]).imojiView).sticker;
+            [self.collectionViewDelegate userDidSelectSticker:sticker andImoji:cellContent fromCollectionView:self];
+#endif
+        } else if ([self.collectionViewDelegate respondsToSelector:@selector(userDidSelectImoji:fromCollectionView:)]) {
             [self.collectionViewDelegate userDidSelectImoji:cellContent
                                          fromCollectionView:self];
         }
@@ -327,6 +332,8 @@ CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
         if (self.animateSelection) {
             [self processCellAnimations:indexPath];
         }
+
+        [self.session markImojiUsageWithIdentifier:((IMImojiObject *) cellContent).identifier originIdentifier:@"IMCollectionView:selected"];
 
     } else if ([cellContent isKindOfClass:[IMImojiCategoryObject class]]) {
         IMImojiImageReference *imojiImage = self.images[(NSUInteger) indexPath.section][(NSUInteger) indexPath.row];

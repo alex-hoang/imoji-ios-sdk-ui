@@ -86,6 +86,13 @@ NSString *const IMCollectionViewCellReuseId = @"ImojiCollectionViewCellReuseId";
 #if IMMessagesFrameworkSupported
     if (stickerViewSupport) {
         _imojiView = [[MSStickerView alloc] initWithFrame:self.frame sticker:nil];
+
+        // disable the MSStickerView's default tap gesture and let the event bubble up to IMCollectionView's delegates
+        for (UIGestureRecognizer *gestureRecognizer in _imojiView.gestureRecognizers) {
+            if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+                gestureRecognizer.enabled = NO;
+            }
+        }
     } else {
         _imojiView = [YYAnimatedImageView new];
     }

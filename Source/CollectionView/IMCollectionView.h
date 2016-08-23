@@ -250,6 +250,12 @@ extern NSUInteger const IMCollectionViewNumberOfItemsToLoad;
 - (void)userDidSelectImoji:(nonnull IMImojiObject *)imoji fromCollectionView:(nonnull IMCollectionView *)collectionView;
 
 /**
+ * @abstract Notified when a user selected an imoji and an MSSticker object exists (applicable only when loadUsingStickerViews is set to YES)
+ * When implemented, this method is called in place of userDidSelectImoji:fromCollectionView:
+ */
+- (void)userDidSelectSticker:(nonnull NSObject*)msStickerObject andImoji:(nonnull IMImojiObject *)imoji fromCollectionView:(nonnull IMCollectionView *)collectionView;
+
+/**
  * @abstract Notified when a user selected a category
  * DEPRECATED: Use userDidSelectCategory:contributingImoji:fromCollectionView instead
  */
@@ -260,6 +266,9 @@ extern NSUInteger const IMCollectionViewNumberOfItemsToLoad;
  */
 - (void)userDidSelectCategory:(nonnull IMImojiCategoryObject *)category contributingImoji:(nullable IMImojiImageReference *)imojiImage fromCollectionView:(nonnull IMCollectionView *)collectionView;
 
+/**
+ * @abstract Notified when a user has scrolled the collection view
+ */
 - (void)imojiCollectionViewDidScroll:(nonnull IMCollectionView *)collectionView;
 
 /**
