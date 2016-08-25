@@ -55,11 +55,6 @@ CGFloat const IMSuggestionCollectionReusableAttributionViewArtistSummaryHeight =
                                                                            color:[UIColor colorWithRed:35.0f / 255.0f green:31.0f / 255.0f blue:32.0f / 255.0f alpha:0.8f]
                                                                     andAlignment:NSTextAlignmentLeft];
 
-        self.attributionLabel.attributedText = [IMAttributeStringUtil attributedString:[[IMResourceBundleUtil localizedStringForKey:@"collectionReusableAttributionViewAttributionLink"] uppercaseString]
-                                                                              withFont:[IMAttributeStringUtil sfUITextMediumFontWithSize:IMCollectionReusableAttributionViewAttributionFontSize * (isLandscape ? IMSuggestionCollectionReusableAttributionViewLandscapeRatio : 1.0f)]
-                                                                                 color:[UIColor colorWithRed:10.0f / 255.0f green:149.0f / 255.0f blue:255.0f / 255.0f alpha:1.0f]
-                                                                          andAlignment:NSTextAlignmentLeft];
-
         self.attributionButton.layer.cornerRadius = IMCollectionReusableAttributionViewAttributionCornerRadius * (isLandscape ? IMSuggestionCollectionReusableAttributionViewLandscapeRatio : 1.0f);
         [self.attributionButton setAttributedTitle:[IMAttributeStringUtil attributedString:[[IMResourceBundleUtil localizedStringForKey:@"collectionReusableAttributionViewAttributionButton"] uppercaseString]
                                                                                   withFont:[IMAttributeStringUtil sfUITextMediumFontWithSize:IMCollectionReusableAttributionViewAttributionFontSize * (isLandscape ? IMSuggestionCollectionReusableAttributionViewLandscapeRatio : 1.0f)]
@@ -109,11 +104,6 @@ CGFloat const IMSuggestionCollectionReusableAttributionViewArtistSummaryHeight =
         make.top.and.left.equalTo(self.urlContainer);
         make.width.equalTo(@(self.attributionLinkImage.image.size.width * (isLandscape ? IMSuggestionCollectionReusableAttributionViewLandscapeRatio : 1.0f)));
         make.height.equalTo(@(self.attributionLinkImage.image.size.height * (isLandscape ? IMSuggestionCollectionReusableAttributionViewLandscapeRatio : 1.0f)));
-    }];
-
-    [self.attributionLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.attributionLinkImage.mas_right).offset(9.0f);
-        make.centerY.equalTo(self.attributionLinkImage);
     }];
 
     [self.attributionButton mas_remakeConstraints:^(MASConstraintMaker *make) {

@@ -77,12 +77,6 @@ CGFloat const IMCollectionReusableAttributionViewAttributionCornerRadius = 13.5f
         _artistContainer = [[UIView alloc] init];
 
         // URL Container view
-        self.attributionLabel = [[UILabel alloc] init];
-        self.attributionLabel.attributedText = [IMAttributeStringUtil attributedString:[[IMResourceBundleUtil localizedStringForKey:@"collectionReusableAttributionViewAttributionLink"] uppercaseString]
-                                                                              withFont:[IMAttributeStringUtil sfUITextMediumFontWithSize:IMCollectionReusableAttributionViewAttributionFontSize]
-                                                                                 color:[UIColor colorWithRed:10.0f / 255.0f green:149.0f / 255.0f blue:255.0f / 255.0f alpha:1.0f]
-                                                                          andAlignment:NSTextAlignmentLeft];
-
         self.attributionLinkImage = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/attribution_link_website.png", self.imageBundle.bundlePath]]];
 
         self.attributionButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -121,7 +115,6 @@ CGFloat const IMCollectionReusableAttributionViewAttributionCornerRadius = 13.5f
         [self.footerView addSubview:self.urlContainer];
         [self.footerView addSubview:self.artistContainer];
 
-        [self.urlContainer addSubview:self.attributionLabel];
         [self.urlContainer addSubview:self.attributionLinkImage];
         [self.urlContainer addSubview:self.attributionButton];
 
@@ -150,11 +143,6 @@ CGFloat const IMCollectionReusableAttributionViewAttributionCornerRadius = 13.5f
         // URL container subview constraints
         [self.attributionLinkImage mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.urlContainer).offset(22.0f);
-            make.centerY.equalTo(self.urlContainer);
-        }];
-
-        [self.attributionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.attributionLinkImage.mas_right).offset(10.0f);
             make.centerY.equalTo(self.urlContainer);
         }];
 
