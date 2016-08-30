@@ -164,7 +164,7 @@
     self.traceToolbar.items = @[
             self.undoButton,
             [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
-            _enableTagScreen ? self.finishTraceButton : self.finishTagButton
+            self.finishTraceButton
     ];
     self.traceToolbar.tintColor = [IMCreateImojiUITheme instance].trimScreenTintColor;
 
@@ -308,6 +308,11 @@
 #pragma mark Showing/Hiding Tag and Trim Screens
 
 - (void)showTagScreen {
+    if (!self.enableTagScreen) {
+        [self finishEditing];
+        return;
+    }
+
     self.tagView.hidden = NO;
     self.traceToolbar.hidden = YES;
     self.tagView.layer.opacity = 0.0f;
@@ -394,18 +399,6 @@
 
     if (changed && self.navigationToolbar) {
         [self determineCancelCreationButtonVisibility];
-    }
-}
-
-- (void)setEnableTagScreen:(BOOL)enableTagScreen {
-    _enableTagScreen = enableTagScreen;
-
-    if (self.traceToolbar) {
-        self.traceToolbar.items = @[
-                self.undoButton,
-                [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
-                enableTagScreen ? self.finishTraceButton : self.finishTagButton
-        ];
     }
 }
 
