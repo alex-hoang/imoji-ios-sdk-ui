@@ -10,6 +10,7 @@
 * Added utility methods to IMCollectionView to manually load IMCategoryObjects or IMImojiObject's
 * Fixed an issue where users are unable to modify a sticker border on the top or bottom sections of the create screen.
 * Removed support for stock MSStickerView's UITapGestureRecognizer. Callers should implement userDidSelectSticker:andImoji:fromCollectionView from IMCollectionViewDelegate.
+* Avoid loading MSSticker objects larger than 500kb.
 
 ### Version 2.2.1
 
