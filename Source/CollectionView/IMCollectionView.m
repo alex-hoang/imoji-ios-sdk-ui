@@ -44,6 +44,7 @@
 NSUInteger const IMCollectionViewNumberOfItemsToLoad = 60;
 CGFloat const IMCollectionReusableHeaderViewDefaultHeight = 49.0f;
 CGFloat const IMCollectionReusableAttributionViewDefaultHeight = 187.0f;
+CGFloat const IMCollectionViewMaximumMSStickerSize = 512000;
 
 @interface IMCollectionView () <IMCollectionReusableAttributionViewDelegate>
 
@@ -1134,10 +1135,12 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
         // use the gif rendering options to avoid converting webp data to NSData for MSSticker's, avoids unnecessary conversion
         if (imoji.supportsAnimation) {
-            options = self.animatedGifRenderingOptions;
+            options = [self.animatedGifRenderingOptions copy];
         } else {
-            options = self.renderingOptions;
+            options = [self.renderingOptions copy];
         }
+
+        options.maximumFileSize = @(IMCollectionViewMaximumMSStickerSize);
 
         [self.session renderImojiAsMSSticker:imoji
                                      options:options
