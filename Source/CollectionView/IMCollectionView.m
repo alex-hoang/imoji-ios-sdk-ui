@@ -294,9 +294,9 @@ CGFloat const IMCollectionViewMaximumMSStickerSize = 512000;
         } else if (self.loadUsingStickerViews) {
 #if IMMessagesFrameworkSupported
             if ([imojiImage isKindOfClass:[MSSticker class]]) {
-                [cell loadImojiSticker:imojiImage animated:YES];
+                [cell loadImojiSticker:imojiImage withPosition:indexPath.row animated:YES];
             } else {
-                [cell loadImojiSticker:nil animated:YES];
+                [cell loadImojiSticker:nil withPosition:indexPath.row animated:YES];
             }
 #else
             [cell loadImojiImage:nil animated:YES];

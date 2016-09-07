@@ -121,12 +121,12 @@ NSString *const IMCollectionViewCellReuseId = @"ImojiCollectionViewCellReuseId";
     }
 }
 
-- (void)loadImojiSticker:(nullable NSObject *)msStickerObject animated:(BOOL)animated {
+- (void)loadImojiSticker:(nullable NSObject *)msStickerObject withPosition:(NSUInteger)position animated:(BOOL)animated {
     [self setupImojiViewWithStickerViewSupport:YES];
 
 #if IMMessagesFrameworkSupported
     if (msStickerObject == nil) {
-        [(MSStickerView *) self.imojiView setSticker:[self placeholderSticker]];
+        [(MSStickerView *) self.imojiView setSticker:[self placeholderStickerWithPosition:position]];
     } else {
         [self animateCellContents:NO];
         [(MSStickerView *) self.imojiView setSticker:(MSSticker *) msStickerObject];
@@ -279,16 +279,14 @@ NSString *const IMCollectionViewCellReuseId = @"ImojiCollectionViewCellReuseId";
 
 #if IMMessagesFrameworkSupported
 
-- (nullable MSSticker *)placeholderSticker {
-    static int position = 0;
-    
-    NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@placeHolderImage-%@.png",
-                                         NSTemporaryDirectory(), @(position)
-                                         ]];
+- (nullable MSSticker *)placeholderStickerWithPosition:(NSUInteger)position {
     NSArray *placeholderImages = [IMResourceBundleUtil loadingPlaceholderImages];
-    UIImage *placeHolderImage = placeholderImages[position % placeholderImages.count];
-    position = (position + 1) % placeholderImages.count;
-    
+    NSUInteger placeholderStartIndex = [IMResourceBundleUtil loadingPlaceholderStartIndex];
+    UIImage *placeHolderImage = placeholderImages[(placeholderStartIndex + position) % placeholderImages.count];
+    NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@placeHolderImage-%@.png",
+                                         NSTemporaryDirectory(), @((placeholderStartIndex + position) % placeholderImages.count)
+                                         ]];
+
     if (![[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
         [UIImagePNGRepresentation(placeHolderImage) writeToURL:url atomically:YES];
     }

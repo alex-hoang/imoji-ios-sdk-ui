@@ -58,7 +58,7 @@ extern NSString * __nonnull const IMCollectionViewCellReuseId;
 
 @interface IMCollectionViewCell(MSStickerSupport)
 
-- (void)loadImojiSticker:(nullable NSObject *)msStickerObject animated:(BOOL)animated;
+- (void)loadImojiSticker:(nullable NSObject *)msStickerObject withPosition:(NSUInteger)position animated:(BOOL)animated;
 
 - (void)animateCellContents:(BOOL)animate;
 
