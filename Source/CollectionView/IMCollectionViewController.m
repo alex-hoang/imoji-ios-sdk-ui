@@ -26,6 +26,7 @@
 #import <Masonry/Masonry.h>
 #import <ImojiSDKUI/IMCollectionViewController.h>
 #import <ImojiSDKUI/IMCategoryCollectionViewCell.h>
+#import <ImojiSDKUI/IMPreviewViewController.h>
 #import <ImojiSDKUI/IMResourceBundleUtil.h>
 #import <ImojiSDK/IMImojiCategoryObject.h>
 #import <ImojiSDK/IMImojiObject.h>
@@ -491,8 +492,10 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
         IMImojiCategoryObject *imojiCategory = [self.collectionView contentForIndexPath:indexPath];
         IMImojiImageReference *imojiImage = [self.collectionView imageForIndexPath:indexPath];
 
-        UIViewController *previewController = [[UIViewController alloc] init];
+        IMPreviewViewController *previewController = [[IMPreviewViewController alloc] initWithView:[IMCollectionView imojiCollectionViewWithSession:self.session]];
         previewController.preferredContentSize = CGSizeMake(0.0, 0.0);
+        previewController.previewCategory = imojiCategory;
+        previewController.previewImojiImage = imojiImage;
 
         CGFloat cellRelativeOriginY = [self.collectionView convertRect:cell.frame toView:self.view].origin.y;
         // Check if part of the cell is under the bottom toolbar
@@ -516,10 +519,6 @@ NSUInteger const IMCollectionViewControllerDefaultSearchDelayInMillis = 500;
         } else {
             previewingContext.sourceRect = cell.frame;
         }
-
-        IMCollectionView *previewCollectionView = [IMCollectionView imojiCollectionViewWithSession:self.session];
-        previewController.view = previewCollectionView;
-        [previewCollectionView loadImojisFromCategory:imojiCategory contributingImoji:imojiImage];
 
         return previewController;
     }
