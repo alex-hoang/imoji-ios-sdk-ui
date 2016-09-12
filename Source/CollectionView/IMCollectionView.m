@@ -894,7 +894,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     self.imojiOperation = operation =
             [self.session searchImojisWithTerm:searchTerm
                                         offset:offset
-                           contributingImojiId:imojiImage ? imojiImage.identifier : nil
+                           contributingImojiId:(imojiImage && ![imojiImage isEqual:[NSNull null]]) ? imojiImage.identifier : nil
                                numberOfResults:@(self.numberOfImojisToLoad)
                      resultSetResponseCallback:^(IMImojiResultSetMetadata *metadata, NSError *error) {
                          if (!operation.isCancelled) {
