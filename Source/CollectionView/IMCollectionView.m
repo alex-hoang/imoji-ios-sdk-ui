@@ -61,7 +61,7 @@ CGFloat const IMCollectionViewMaximumMSStickerSize = 512000;
 @property(nonatomic, copy) NSString *currentHeader;
 @property(nonatomic, copy) NSString *followUpSearchTerm DEPRECATED_ATTRIBUTE;
 @property(nonatomic, strong) IMCategoryAttribution *currentAttribution;
-@property(nonatomic, strong) UIImage *artistPicture;
+@property(nonatomic, strong) IMCollectionReusableAttributionView *attributionView;
 
 @property(nonatomic) BOOL shouldShowAttribution;
 @property(nonatomic) BOOL shouldLoadNewSection;
@@ -170,8 +170,8 @@ CGFloat const IMCollectionViewMaximumMSStickerSize = 512000;
                                                                                                                                        forIndexPath:indexPath];
 
         [attributionView setupWithAttribution:self.currentAttribution];
-        attributionView.artistPicture.image = self.artistPicture;
         attributionView.attributionViewDelegate = self;
+        self.attributionView = attributionView;
 
         return attributionView;
     }
@@ -769,11 +769,12 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if (category.attribution) {
         self.shouldShowAttribution = YES;
 
+        self.attributionView.artistPicture.image = nil;
         [self.session renderImoji:category.attribution.artist.previewImoji
                           options:self.renderingOptions
                          callback:^(UIImage *image, NSError *renderError) {
                              if (renderError == nil) {
-                                 self.artistPicture = image;
+                                 self.attributionView.artistPicture.image = image;
                              }
                          }];
 
