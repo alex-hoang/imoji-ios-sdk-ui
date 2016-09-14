@@ -265,10 +265,6 @@ CGFloat const IMCollectionViewMaximumMSStickerSize = 512000;
                 splashCellType = IMCollectionViewSplashCellNoConnection;
                 break;
 
-            case IMCollectionViewContentTypeEnableFullAccessSplash:
-                splashCellType = IMCollectionViewSplashCellEnableFullAccess;
-                break;
-
             case IMCollectionViewContentTypeNoResultsSplash:
             default:
                 splashCellType = IMCollectionViewSplashCellNoResults;
@@ -452,7 +448,6 @@ CGFloat const IMCollectionViewMaximumMSStickerSize = 512000;
         case IMCollectionViewContentTypeRecentsSplash:
         case IMCollectionViewContentTypeCollectionSplash:
         case IMCollectionViewContentTypeNoConnectionSplash:
-        case IMCollectionViewContentTypeEnableFullAccessSplash:
         case IMCollectionViewContentTypeNoResultsSplash: {
 
             return availableSize;
@@ -793,10 +788,6 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     switch (splashType) {
         case IMCollectionViewSplashCellNoConnection:
             self.contentType = IMCollectionViewContentTypeNoConnectionSplash;
-            break;
-
-        case IMCollectionViewSplashCellEnableFullAccess:
-            self.contentType = IMCollectionViewContentTypeEnableFullAccessSplash;
             break;
 
         case IMCollectionViewSplashCellNoResults:
@@ -1229,10 +1220,6 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                 [self.collectionViewDelegate userDidSelectSplash:IMCollectionViewSplashCellNoConnection fromCollectionView:self];
                 break;
 
-            case IMCollectionViewContentTypeEnableFullAccessSplash:
-                [self.collectionViewDelegate userDidSelectSplash:IMCollectionViewSplashCellEnableFullAccess fromCollectionView:self];
-                break;
-
             case IMCollectionViewContentTypeNoResultsSplash:
                 [self.collectionViewDelegate userDidSelectSplash:IMCollectionViewSplashCellNoResults fromCollectionView:self];
                 break;
@@ -1308,7 +1295,6 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
             case IMCollectionViewContentTypeRecentsSplash:
             case IMCollectionViewContentTypeCollectionSplash:
             case IMCollectionViewContentTypeNoConnectionSplash:
-            case IMCollectionViewContentTypeEnableFullAccessSplash:
             case IMCollectionViewContentTypeNoResultsSplash:
 
                 // add a filler object for rendering splashes

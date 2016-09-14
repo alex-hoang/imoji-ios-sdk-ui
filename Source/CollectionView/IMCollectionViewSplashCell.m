@@ -64,14 +64,6 @@ NSString *const IMCollectionViewSplashCellReuseId = @"IMCollectionViewSplashCell
                                                                                        color:[UIColor colorWithRed:167.0f / 255.0f green:169.0f / 255.0f blue:172.0f / 255.0f alpha:1]
                                                                                 andAlignment:NSTextAlignmentCenter]];
 
-            [self loadSplashCellWithText:attributedString imageName:@"collection_view_splash_noconnection" imageBundle:imageBundle];
-            break;
-        case IMCollectionViewSplashCellEnableFullAccess:
-            [attributedString appendAttributedString:[IMAttributeStringUtil attributedString:[IMResourceBundleUtil localizedStringForKey:@"collectionViewSplashEnableFullAccess"]
-                                                                                    withFont:[IMAttributeStringUtil sfUIDisplayRegularFontWithSize:14.0f]
-                                                                                       color:[UIColor colorWithRed:167.0f / 255.0f green:169.0f / 255.0f blue:172.0f / 255.0f alpha:1]
-                                                                                andAlignment:NSTextAlignmentCenter]];
-
             [self loadSplashCellWithText:attributedString imageName:@"collection_view_splash_enableaccess" imageBundle:imageBundle];
             break;
         case IMCollectionViewSplashCellNoResults: {

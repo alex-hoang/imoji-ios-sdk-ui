@@ -36,7 +36,6 @@ typedef NS_ENUM(NSUInteger, IMCollectionViewContentType) {
     IMCollectionViewContentTypeRecentsSplash,
     IMCollectionViewContentTypeCollectionSplash,
     IMCollectionViewContentTypeNoConnectionSplash,
-    IMCollectionViewContentTypeEnableFullAccessSplash,
     IMCollectionViewContentTypeNoResultsSplash
 };
 
