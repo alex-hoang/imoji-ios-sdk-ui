@@ -28,7 +28,6 @@
 
 typedef NS_ENUM(NSUInteger, IMCollectionViewSplashCellType) {
     IMCollectionViewSplashCellNoConnection = 1,
-    IMCollectionViewSplashCellEnableFullAccess,
     IMCollectionViewSplashCellNoResults,
     IMCollectionViewSplashCellRecents,
     IMCollectionViewSplashCellCollection
