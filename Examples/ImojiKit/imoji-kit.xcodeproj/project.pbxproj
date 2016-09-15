@@ -198,12 +198,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FA15C7FC1CD020750065008B /* Build configuration list for PBXNativeTarget "imoji-kit" */;
 			buildPhases = (
-				2386026B7186E2A5879C7B1C /* 📦 Check Pods Manifest.lock */,
+				2386026B7186E2A5879C7B1C /* [CP] Check Pods Manifest.lock */,
 				FA15C7E11CD020750065008B /* Sources */,
 				FA15C7E21CD020750065008B /* Frameworks */,
 				FA15C7E31CD020750065008B /* Resources */,
-				BDAADD153DAF8656A6A4FD89 /* 📦 Embed Pods Frameworks */,
-				943CB2A51FBD7DD85D40F1B7 /* 📦 Copy Pods Resources */,
+				BDAADD153DAF8656A6A4FD89 /* [CP] Embed Pods Frameworks */,
+				943CB2A51FBD7DD85D40F1B7 /* [CP] Copy Pods Resources */,
 				D2F996636E594B81EA8A9740 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -262,14 +262,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2386026B7186E2A5879C7B1C /* 📦 Check Pods Manifest.lock */ = {
+		2386026B7186E2A5879C7B1C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,14 +277,14 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		943CB2A51FBD7DD85D40F1B7 /* 📦 Copy Pods Resources */ = {
+		943CB2A51FBD7DD85D40F1B7 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -292,14 +292,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-imoji-kit/Pods-imoji-kit-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BDAADD153DAF8656A6A4FD89 /* 📦 Embed Pods Frameworks */ = {
+		BDAADD153DAF8656A6A4FD89 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
