@@ -29,7 +29,7 @@
 #import <ImojiSDKUI/IMDrawingUtils.h>
 #import <Masonry/View+MASAdditions.h>
 
-@interface IMCameraViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, IMCameraViewDelegate>
+@interface IMCameraViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, IMCameraViewDelegate, IMCameraEnableAccessViewDelegate>
 
 // AVFoundation variables
 @property(nonatomic, strong) AVCaptureSession *captureSession;
@@ -143,6 +143,17 @@
     }];
 }
 
+- (void)setupCameraEnableAccessView {
+    self.enableAccessView = [IMCameraEnableAccessView imojiCameraEnableAccessView];
+    self.enableAccessView.delegate = self;
+
+    [self.cameraView insertSubview:self.enableAccessView belowSubview:self.cameraView.navigationBar];
+
+    [self.enableAccessView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.cameraView);
+    }];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
@@ -187,9 +198,10 @@
     // Remove preview from the view
     [self.previewLayer removeFromSuperlayer];
     [self.previewView removeFromSuperview];
+    [self.enableAccessView removeFromSuperview];
 
     // Stop running AVCaptureSession
-    if ([self checkAuthorizationStatus] == AVAuthorizationStatusAuthorized) {
+    if ([self getAuthorizationStatus] == AVAuthorizationStatusAuthorized) {
         [self stopRunningCaptureSession];
     }
 }
@@ -198,8 +210,12 @@
     return true;
 }
 
+- (AVAuthorizationStatus)getAuthorizationStatus {
+    return [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+}
+
 - (AVAuthorizationStatus)checkAuthorizationStatus {
-    __block AVAuthorizationStatus authorizationStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    __block AVAuthorizationStatus authorizationStatus = [self getAuthorizationStatus];
 
     switch (authorizationStatus) {
         case AVAuthorizationStatusNotDetermined: {
@@ -212,6 +228,9 @@
                 } else {
                     // user denied, nothing much to do
                     authorizationStatus = AVAuthorizationStatusDenied;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self setupCameraEnableAccessView];
+                    });
                 }
             }];
 
@@ -221,15 +240,8 @@
             break;
         case AVAuthorizationStatusDenied: {
             // the user explicitly denied camera usage
-#if !IMOJI_APP_EXTENSION
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Camera" message:@"Taking photos requires access to your camera." preferredStyle:UIAlertControllerStyleAlert];
+            [self setupCameraEnableAccessView];
 
-            [alert addAction:[UIAlertAction actionWithTitle:@"Go to settings" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-            }]];
-
-            [self presentViewController:alert animated:YES completion:nil];
-#endif
             break;
         }
         case AVAuthorizationStatusRestricted: {
@@ -283,79 +295,83 @@
 #pragma mark IMCameraViewDelegate
 
 - (void)userDidTapCaptureButtonFromCameraView:(IMCameraView *)cameraView {
-    dispatch_async(self.captureSessionQueue, ^{
-        AVCaptureConnection *connection = [self.stillCameraOutput connectionWithMediaType:AVMediaTypeVideo];
-        if (connection) {
-            [self.stillCameraOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef sampleBuffer, NSError *error) {
-                if (error) {
-                    NSLog(@"error while capturing still image: %@", error);
-                    [self showCaptureErrorAlertTitle:@"Problems" message:@"Yikes! There was a problem taking the photo."];
-                } else {
-                    // if the session preset .Photo is used, or if explicitly set in the device's outputSettings
-                    // we get the data already compressed as JPEG
-                    NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:sampleBuffer];
+    if ([self getAuthorizationStatus] == AVAuthorizationStatusAuthorized) {
+        dispatch_async(self.captureSessionQueue, ^{
+            AVCaptureConnection *connection = [self.stillCameraOutput connectionWithMediaType:AVMediaTypeVideo];
+            if (connection) {
+                [self.stillCameraOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef sampleBuffer, NSError *error) {
+                    if (error) {
+                        NSLog(@"error while capturing still image: %@", error);
+                        [self showCaptureErrorAlertTitle:@"Problems" message:@"Yikes! There was a problem taking the photo."];
+                    } else {
+                        // if the session preset .Photo is used, or if explicitly set in the device's outputSettings
+                        // we get the data already compressed as JPEG
+                        NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:sampleBuffer];
 
-                    // the sample buffer also contains the metadata, in case we want to modify it
-                    NSDictionary *metadata = (__bridge NSDictionary *) CMCopyDictionaryOfAttachments(nil, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
+                        // the sample buffer also contains the metadata, in case we want to modify it
+                        NSDictionary *metadata = (__bridge NSDictionary *) CMCopyDictionaryOfAttachments(nil, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
 
-                    UIImage *image = [UIImage imageWithData:imageData];
-                    if (image) {
-                        AVCaptureDeviceInput *currentCameraInput = self.captureSession.inputs.firstObject;
-                        if (currentCameraInput.device.position == AVCaptureDevicePositionFront) {
-                            image = [IMDrawingUtils flipImage:image];
-                        }
-
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (self.delegate && [self.delegate respondsToSelector:@selector(userDidCaptureImage:metadata:fromCameraViewController:)]) {
-                                [self.delegate userDidCaptureImage:image metadata:metadata fromCameraViewController:self];
+                        UIImage *image = [UIImage imageWithData:imageData];
+                        if (image) {
+                            AVCaptureDeviceInput *currentCameraInput = self.captureSession.inputs.firstObject;
+                            if (currentCameraInput.device.position == AVCaptureDevicePositionFront) {
+                                image = [IMDrawingUtils flipImage:image];
                             }
-                        });
+
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if (self.delegate && [self.delegate respondsToSelector:@selector(userDidCaptureImage:metadata:fromCameraViewController:)]) {
+                                    [self.delegate userDidCaptureImage:image metadata:metadata fromCameraViewController:self];
+                                }
+                            });
+                        }
                     }
-                }
-            }];
-        }
-    });
+                }];
+            }
+        });
+    }
 }
 
 - (void)userDidTapFlipButtonFromCameraView:(IMCameraView *)cameraView {
-    dispatch_async(self.captureSessionQueue, ^{
-        [self.captureSession beginConfiguration];
+    if ([self getAuthorizationStatus] == AVAuthorizationStatusAuthorized) {
+        dispatch_async(self.captureSessionQueue, ^{
+            [self.captureSession beginConfiguration];
 
-        AVCaptureDeviceInput *currentCameraInput = self.captureSession.inputs.firstObject;
-        if (currentCameraInput) {
-            [self.captureSession removeInput:currentCameraInput];
+            AVCaptureDeviceInput *currentCameraInput = self.captureSession.inputs.firstObject;
+            if (currentCameraInput) {
+                [self.captureSession removeInput:currentCameraInput];
 
-            NSError *error;
-            AVCaptureDeviceInput *cameraInput = [AVCaptureDeviceInput deviceInputWithDevice:currentCameraInput.device.position == AVCaptureDevicePositionFront ? self.backCameraDevice : self.frontCameraDevice
-                                                                                      error:&error];
-
-            if (error) {
-                NSLog(@"error while locking camera for configuration in flipButtonTapped(): %@", error);
-            } else {
-                [cameraInput.device lockForConfiguration:&error];
+                NSError *error;
+                AVCaptureDeviceInput *cameraInput = [AVCaptureDeviceInput deviceInputWithDevice:currentCameraInput.device.position == AVCaptureDevicePositionFront ? self.backCameraDevice : self.frontCameraDevice
+                                                                                          error:&error];
 
                 if (error) {
                     NSLog(@"error while locking camera for configuration in flipButtonTapped(): %@", error);
                 } else {
-                    if ([cameraInput.device isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
-                        cameraInput.device.exposureMode = AVCaptureExposureModeContinuousAutoExposure;
+                    [cameraInput.device lockForConfiguration:&error];
+
+                    if (error) {
+                        NSLog(@"error while locking camera for configuration in flipButtonTapped(): %@", error);
+                    } else {
+                        if ([cameraInput.device isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
+                            cameraInput.device.exposureMode = AVCaptureExposureModeContinuousAutoExposure;
+                        }
+
+                        if ([cameraInput.device isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
+                            cameraInput.device.focusMode = AVCaptureFocusModeContinuousAutoFocus;
+                        }
+
+                        [cameraInput.device unlockForConfiguration];
                     }
 
-                    if ([cameraInput.device isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
-                        cameraInput.device.focusMode = AVCaptureFocusModeContinuousAutoFocus;
+                    if ([self.captureSession canAddInput:cameraInput]) {
+                        [self.captureSession addInput:cameraInput];
                     }
-
-                    [cameraInput.device unlockForConfiguration];
-                }
-
-                if ([self.captureSession canAddInput:cameraInput]) {
-                    [self.captureSession addInput:cameraInput];
                 }
             }
-        }
 
-        [self.captureSession commitConfiguration];
-    });
+            [self.captureSession commitConfiguration];
+        });
+    }
 }
 
 - (void)userDidTapPhotoLibraryButtonFromCameraView:(IMCameraView *)cameraView {
@@ -383,6 +399,14 @@
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+#pragma mark IMCameraEnableAccessViewDelegate
+
+- (void)userDidTapConfirmButton {
+#if !IMOJI_APP_EXTENSION
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+#endif
 }
 
 #pragma mark UIImagePickerControllerDelegate

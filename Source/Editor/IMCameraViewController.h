@@ -25,6 +25,7 @@
 
 #import <ImojiSDK/IMImojiSession.h>
 #import <ImojiSDKUI/IMCameraView.h>
+#import <ImojiSDKUI/IMCameraEnableAccessView.h>
 
 @protocol IMCameraViewControllerDelegate;
 
@@ -34,6 +35,7 @@
 @property(nonatomic, readonly) UIImageOrientation currentOrientation;
 
 @property(nonatomic, strong, nullable) IMCameraView *cameraView;
+@property(nonatomic, strong, nullable) IMCameraEnableAccessView *enableAccessView;
 
 @property(nonatomic, weak, nullable) id <IMCameraViewControllerDelegate> delegate;
 
