@@ -231,7 +231,10 @@
     CGImageRef pImage = igImageToNative(trimmedImage);
     igImageDestroy(trimmedImage);
 
-    return [UIImage imageWithCGImage:pImage];
+    UIImage *image = [UIImage imageWithCGImage:pImage];
+    CGImageRelease(pImage);
+
+    return image;
 }
 
 - (UIImage *)borderedOutputImage {

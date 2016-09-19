@@ -296,7 +296,9 @@
                     NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:sampleBuffer];
 
                     // the sample buffer also contains the metadata, in case we want to modify it
-                    NSDictionary *metadata = (__bridge NSDictionary *) CMCopyDictionaryOfAttachments(nil, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
+                    CFDictionaryRef pDictionary = CMCopyDictionaryOfAttachments(nil, sampleBuffer, kCMAttachmentMode_ShouldPropagate);
+                    NSDictionary *metadata = (__bridge NSDictionary *) pDictionary;
+                    CFRelease(pDictionary);
 
                     UIImage *image = [UIImage imageWithData:imageData];
                     if (image) {
