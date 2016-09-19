@@ -62,12 +62,7 @@
 }
 
 - (void)dealloc {
-    self.displayLink.paused = true;
-    [self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-
-    if (self.igEditor != nil) {
-        igEditorDestroy(self.igEditor);
-    }
+    [self unload];
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -263,6 +258,28 @@
     igBorderDestroy(border, true);
 
     return borderedImoji;
+}
+
+- (void)unload {
+    if (!self.displayLink.paused) {
+        self.displayLink.paused = true;
+        [self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    }
+
+    if (self.igEditor != nil) {
+        igEditorDestroy(self.igEditor);
+        self.igEditor = nil;
+    }
+
+    if (self.igInputImage != nil) {
+        igImageDestroy(self.igInputImage);
+        self.igInputImage = nil;
+    }
+
+    if (self.igContext) {
+        igContextDestroy(self.igContext);
+        self.igContext = nil;
+    }
 }
 
 + (CGImageRef)CGImageWithCorrectOrientation:(UIImage *)originalImage {

@@ -255,6 +255,10 @@
     }
 }
 
+- (void)dealloc {
+    [_imojiEditor unload];
+}
+
 - (void)showHelpScreen {
     IMCreateImojiAssistantViewController *assistantViewController =
             [IMCreateImojiAssistantViewController createAssistantViewControllerWithSession:self.session];

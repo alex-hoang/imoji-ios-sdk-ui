@@ -69,6 +69,11 @@
 - (void)reset;
 
 /**
+* @abstract Removes the editor from the view
+*/
+- (void)unload;
+
+/**
 * @abstract The finalized image without borders for export. If hasOutputImage is false, this will return nil.
 */
 @property(nonatomic, readonly, nonnull) UIImage *outputImage;
