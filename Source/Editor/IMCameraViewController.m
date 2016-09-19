@@ -144,7 +144,7 @@
 }
 
 - (void)setupCameraEnableAccessView {
-    self.enableAccessView = [IMCameraEnableAccessView imojiCameraEnableAccessView];
+    self.enableAccessView = [[IMCameraEnableAccessView alloc] initWithFrame:CGRectZero];
     self.enableAccessView.delegate = self;
 
     [self.cameraView insertSubview:self.enableAccessView belowSubview:self.cameraView.navigationBar];
