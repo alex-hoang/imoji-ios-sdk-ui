@@ -1,5 +1,12 @@
 # Imoji iOS UI Widgets Changes
 
+### Version 2.2.3
+
+* Attribution images where not being reloaded properly sometimes.
+* Fixes a crash caused by users tapping a category prior to it being loaded.
+* Fixes memory leaks from ImojiGraphics when dismissing IMCreateImojiViewController.
+* Sets an upper limit to source image for IMCreateImojiViewController of 2300x2300.
+
 ### Version 2.2.2
 
 * Adds support for imoji-ios-sdk 2.3.2. Update and deprecate relevant methods to support IMImojiImageReference.
