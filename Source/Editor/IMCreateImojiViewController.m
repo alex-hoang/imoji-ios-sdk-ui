@@ -35,6 +35,8 @@
 #import "UIImage+Extensions.h"
 #import <Masonry/Masonry.h>
 
+const CGFloat IMCreateImojiViewControllerMaxImageResolution = 2300.f;
+
 @interface IMCreateImojiViewToolBar : UIToolbar
 
 @end
@@ -134,6 +136,11 @@
     CGSize screenSize = [UIScreen mainScreen].bounds.size;
     CGFloat maxBoundary = (screenSize.height > screenSize.width ? screenSize.height : screenSize.width) *
             [UIScreen mainScreen].scale * 2.f;
+
+    // anything beyond the max resolution dimensions cannot be rendered by our OpenGL context
+    if (maxBoundary > IMCreateImojiViewControllerMaxImageResolution) {
+        maxBoundary = IMCreateImojiViewControllerMaxImageResolution;
+    }
     CGSize maximumSize = CGSizeMake(maxBoundary, maxBoundary);
 
     if (_sourceImage.size.width > maximumSize.width || _sourceImage.size.height > maximumSize.height) {
